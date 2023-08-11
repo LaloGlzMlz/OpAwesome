@@ -9,6 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     
+    
+    @Binding var scores: [Score]
+    let saveAction: ()-> Void
+    
     // The navigation of the app is based on the state of the game.
     // Each state presents a different view on the SwiftUI app structure
     @State var currentGameState: GameState = .playing
@@ -28,12 +32,12 @@ struct ContentView: View {
                 .environmentObject(gameLogic)
         
         case .gameOver:
-            GameOverView(currentGameState: $currentGameState)
+            GameOverView(currentGameState: $currentGameState, scores: $scores, saveAction: saveAction)
                 .environmentObject(gameLogic)
         }
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(scores: .constant([])) {}
 }
