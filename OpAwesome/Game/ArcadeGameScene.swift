@@ -30,17 +30,23 @@ class ArcadeGameScene: SKScene {
     var joystickKnob: SKShapeNode?
     var joystickActive: Bool = false
     var mapNode: SKSpriteNode!
-    var fakedeathButton: SKSpriteNode?
+    var fakedeathButton: SKShapeNode?
     var buttonActive: Bool = false
-    var enemies: [SKSpriteNode] = []
+    var enemies: [EnemyBundle] = []
+    var enemyCharacter: EnemyCharacter!
     var wall: SKSpriteNode!
+    let aliveButtonTexture = SKTexture(imageNamed: "aliveButton")
+    let deadButtonTexture = SKTexture(imageNamed: "deadButton")
+    var walls: [SKSpriteNode] = []
+    
     
     var gameCamera = SKCameraNode()
     
     
     override func didMove(to view: SKView) {
 
-        
+        aliveButtonTexture.filteringMode = .nearest
+        deadButtonTexture.filteringMode = .nearest
         
         let playerTexture = SKTexture(imageNamed: "OpossumDownFrame")
         let mapTexture = SKTexture(imageNamed: "Ground")
@@ -48,7 +54,10 @@ class ArcadeGameScene: SKScene {
         addChild(gameCamera)
         
         // Create the player node
-        player = SKSpriteNode(texture: playerTexture)
+        
+        playerCharacter = Character(name: "Opossum")
+        
+        player = SKSpriteNode(texture: playerCharacter.animations[.Bottom]?.first)
         print("player gets created")
         
         player.size = CGSize(width: 75, height: 75)
@@ -60,8 +69,6 @@ class ArcadeGameScene: SKScene {
         player.physicsBody?.allowsRotation = false
         player.physicsBody?.affectedByGravity = false
         player.physicsBody?.allowsRotation = false
-        
-        playerCharacter = Character(name: "Opossum")
         
         
         
@@ -97,12 +104,15 @@ class ArcadeGameScene: SKScene {
         gameCamera.addChild(joystickKnob!)
         
         // Create the button for faking death
-        fakedeathButton = SKSpriteNode(imageNamed: "deadButton")
+        fakedeathButton = SKShapeNode(circleOfRadius: 70)
+        fakedeathButton?.fillColor = .white
+        fakedeathButton?.fillTexture = deadButtonTexture
         fakedeathButton?.position = CGPoint(x: 300, y: -100)
         fakedeathButton?.zPosition = 5
-        fakedeathButton?.alpha = 1
+        fakedeathButton?.alpha = 0.4
         gameCamera.addChild(fakedeathButton!)
         //Create the enemy
+        enemyCharacter = EnemyCharacter()
         createEnemies()
         startFruitCycle()
         
@@ -137,6 +147,7 @@ class ArcadeGameScene: SKScene {
         print(position)
         
         addChild(wall)
+        walls.append(wall)
     }
     
     
@@ -158,7 +169,7 @@ class ArcadeGameScene: SKScene {
                     
                     if gameLogic.currentScore > 0 {
                         print("QUICK! FAKE DEATH!")
-                        fakedeathButton?.texture = SKTexture(imageNamed: "aliveButton")
+                        fakedeathButton?.fillTexture = SKTexture(imageNamed: "aliveButton")
                         buttonActive = true
 //                        fakedeathButton?.fillColor = .green
                         joystickKnob?.position = CGPoint(x: -300, y: -100)
@@ -271,6 +282,19 @@ class ArcadeGameScene: SKScene {
         //let position = CGPoint(x: CGFloat.random(in: xSpawnRange), y: CGFloat.random(in: ySpawnRange))
         let position = CGPoint(x: randomX, y: randomY)
         
+        var inWall = false
+        for wall in walls {
+            if wall.contains(position) {
+                inWall = true
+                print("Apples shan't spawn here.")
+                break
+            }
+        }
+        
+        if inWall {
+            return randomFruitPosition()
+        }
+        
         return position
     }
     
@@ -305,9 +329,9 @@ class ArcadeGameScene: SKScene {
         //Check if the player has been spotted by an enemy
         for enemy in enemies {
             //Since the viewCone of the enemy is a child of the enemy, we need to convert the position of the player to make it relative to the enemy as well to detect an overlap
-            let playerRelativePosition = convert(player.position, to: enemy)
+            let playerRelativePosition = convert(player.position, to: enemy.node)
             
-            let viewCone = enemy.children.first(where: {node in node.name == "fieldOfView"})
+            let viewCone = enemy.node.children.first(where: {node in node.name == "fieldOfView"})
             if viewCone?.contains(playerRelativePosition) ?? false {
                 IsGameOver()
             }
@@ -316,6 +340,7 @@ class ArcadeGameScene: SKScene {
         
         if buttonActive==true && gameLogic.currentScore == 0 {
             turnOffButton()
+            fakedeathButton?.alpha = 0.4
         }
         
     }
@@ -329,16 +354,14 @@ class ArcadeGameScene: SKScene {
     //MARK: moved Enemies
     func createEnemies() {
         //        let movementAction = createMovementAction()
-        let owlFlyingDown = [SKTexture(imageNamed: "owlFlyingDown0"), SKTexture(imageNamed: "owlFlyingDown1"), SKTexture(imageNamed: "owlFlyingDown2"), SKTexture(imageNamed: "owlFlyingDown1")]
-        let owlStandingDown = SKTexture(imageNamed: "owlStandingDown")
         
         for _ in 0..<8 {
             let enemy = SKSpriteNode()
             enemy.size = player.size
-            enemy.position = randomFruitPosition()
+            enemy.position = randomEnemyPosition()
             enemy.constraints = movementWhithinMap
             enemy.zPosition = 3
-            enemy.texture = owlStandingDown
+            enemy.run(SKAction.repeatForever(SKAction.animate(with: enemyCharacter.animations[Orientation.Right]!, timePerFrame: 0.1)), withKey: ActionKeys.animation.rawValue)
             
             enemy.physicsBody = SKPhysicsBody(circleOfRadius: 35)
             enemy.physicsBody?.categoryBitMask = PhysicsCategory.predators
@@ -356,15 +379,13 @@ class ArcadeGameScene: SKScene {
                 if self.decideMove() {
                     let angle = self.randomAngle()
                     let velocity = self.movementDirection(angle: angle)
+                    let orientation = self.enemyCharacter.updateOrientation(angle: CGFloat(angle))
                     enemy.physicsBody?.velocity = velocity
                     visionCone.zRotation = CGFloat(angle)
-                    enemy.run(SKAction.repeatForever(SKAction.animate(with: owlFlyingDown, timePerFrame: 0.1)), withKey: ActionKeys.animation.rawValue)
+                    enemy.removeAction(forKey: ActionKeys.animation.rawValue)
+                    enemy.run(SKAction.repeatForever(SKAction.animate(with: self.enemyCharacter.animations[orientation]!, timePerFrame: 0.1)), withKey: ActionKeys.animation.rawValue)
                 } else {
                     enemy.physicsBody?.velocity = .zero
-                    enemy.removeAction(forKey: ActionKeys.animation.rawValue)
-                }
-                if enemy.physicsBody?.velocity == .zero {
-                    enemy.texture = owlStandingDown
                 }
             }
             
@@ -372,8 +393,19 @@ class ArcadeGameScene: SKScene {
             let fullActiom = SKAction.sequence([moveAction, waitAction])
             
             enemy.run(SKAction.repeatForever(fullActiom))
-            enemies.append(enemy)
+            enemies.append(EnemyBundle(node: enemy, orientation: Orientation.allCases.randomElement()!))
         }
+    }
+    
+    func randomEnemyPosition() -> CGPoint {
+        
+        let randomX = CGFloat.random(in: 0...1576)
+        let randomY = CGFloat.random(in: 300...969)
+        
+        //let position = CGPoint(x: CGFloat.random(in: xSpawnRange), y: CGFloat.random(in: ySpawnRange))
+        let position = CGPoint(x: randomX, y: randomY)
+        
+        return position
     }
     
     //MARK: moved
@@ -395,9 +427,8 @@ class ArcadeGameScene: SKScene {
     func movementDirection(angle: Float) -> CGVector {
         let velocity: Float = 150
         
-        let x: CGFloat = CGFloat(-sin(angle) * velocity)
-        let y: CGFloat = CGFloat(cos(angle) * velocity)
-        //Why are sin and cos effed up, you may wonder. When the character moves, I need to change the orientation of the field of view and the sprite of the character accordingly. The angle 0 for the orientation of the field of view is currently the y+ axis. I used cos and sin like this to be coherent with that angle. I may change it later like so: sin and cos go back to their rightful places, i'll modify the shape of the field of view so that it extends to the right rather than to the top
+        let x: CGFloat = CGFloat(cos(angle) * velocity)
+        let y: CGFloat = CGFloat(sin(angle) * velocity)
         
         return CGVector(dx: x, dy: y)
     }
@@ -406,8 +437,8 @@ class ArcadeGameScene: SKScene {
     func createFieldOfView() -> SKShapeNode {
         let path = CGMutablePath()
         path.move(to: CGPoint(x: 0, y: 0))
-        path.addLine(to: CGPoint(x: 100, y: 200))
-        path.addLine(to: CGPoint(x: -100, y: 200))
+        path.addLine(to: CGPoint(x: 200, y: 100))
+        path.addLine(to: CGPoint(x: 200, y: -100))
         path.closeSubpath()
         
         let fieldOfView = SKShapeNode()
@@ -428,7 +459,7 @@ class ArcadeGameScene: SKScene {
 extension ArcadeGameScene: SKPhysicsContactDelegate {
     //To manage the behavior in respons to two physics bodies having contact
     func didBegin(_ contact: SKPhysicsContact) {
-        print("Contact happened!")
+//        print("Contact happened!")
         
         let firstBody: SKPhysicsBody = contact.bodyA
         let secondBody: SKPhysicsBody = contact.bodyB
@@ -438,12 +469,18 @@ extension ArcadeGameScene: SKPhysicsContactDelegate {
             if secondBody.categoryBitMask == PhysicsCategory.player {
                 gameLogic.score(points: 1)
             }
+            if(gameLogic.currentScore == 1) {
+                fakedeathButton?.alpha = 1
+            }
         }
         
         if let node = secondBody.node, node.name == "fruit" {
             node.removeFromParent()
             if firstBody.categoryBitMask == PhysicsCategory.player {
                 gameLogic.score(points: 1)
+            }
+            if(gameLogic.currentScore == 1) {
+                fakedeathButton?.alpha = 1
             }
         }
         
@@ -479,13 +516,13 @@ extension ArcadeGameScene: SKPhysicsContactDelegate {
     func turnOffButton() {
         print("RUN POSSUM, RUN!")
         buttonActive = false
-//        fakedeathButton?.fillColor = .white
-//        fakedeathButton = SKShapeNode(fileNamed: "deadButton")
-        fakedeathButton?.texture = SKTexture(imageNamed: "deadButton")
-        fakedeathButton?.alpha = 0.4
+        fakedeathButton?.fillTexture = SKTexture(imageNamed: "deadButton")
         joystickKnob?.alpha = 1
         fakedeathButton?.removeAction(forKey: ActionKeys.eating.rawValue)
         player.texture = playerCharacter.animations[self.playerCharacter.orientation]!.first!
+        if gameLogic.currentScore == 0 {
+            fakedeathButton?.alpha = 0.4
+        }
     }
 }
 

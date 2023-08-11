@@ -61,3 +61,57 @@ class Character {
         
 //    get orientation
 }
+
+class EnemyCharacter {
+    let name = "Owl"
+    var animations: Dictionary<Orientation, [SKTexture]>
+    
+    init() {
+        var animations: Dictionary<Orientation, [SKTexture]> = [:]
+        for orientation in Orientation.allCases {
+            var textures: [SKTexture] = []
+            for i in 0..<4 {
+                let texture = SKTexture(imageNamed: name + orientation.rawValue + "\(i)")
+                texture.filteringMode = .nearest
+                textures.append(texture)
+            }
+            animations.updateValue(textures, forKey: orientation)
+        }
+
+        self.animations = animations
+    }
+    
+    func updateOrientation(angle: CGFloat) -> Orientation {
+        var theAngle = angle
+        
+        if angle > CGFloat.pi {
+            theAngle = angle - CGFloat.pi*2
+        }
+        
+        if (theAngle > (-1.0 * (CGFloat.pi/8))) && (theAngle < (CGFloat.pi/8)) {
+            //Moving up
+            return Orientation.Right
+        } else if (theAngle > (CGFloat.pi/8)) && (theAngle < (3.0 * (CGFloat.pi/8))){
+            return Orientation.TopRight
+        } else if (theAngle > (3.0 * (CGFloat.pi/8))) && (theAngle < (5.0 * (CGFloat.pi/8))){
+            return Orientation.Top
+        } else if (theAngle > (5.0 * (CGFloat.pi/8))) && (theAngle < (7.0 * (CGFloat.pi/8))){
+            return Orientation.TopLeft
+        } else if (theAngle > (7.0 * (CGFloat.pi/8))) && (theAngle < (9.0 * (CGFloat.pi/8))){
+            return Orientation.Left
+        } else if (theAngle < (-1.0 * (CGFloat.pi/8))) && (theAngle > (-3.0 * (CGFloat.pi/8))){
+            return Orientation.BottomRight
+        } else if (theAngle < (-3.0 * (CGFloat.pi/8))) && (theAngle > (-5.0 * (CGFloat.pi/8))){
+            return Orientation.Bottom
+        } else {
+            return Orientation.BottomLeft
+        }
+    }
+    
+    
+}
+
+struct EnemyBundle {
+    var node: SKSpriteNode
+    var orientation: Orientation
+}
