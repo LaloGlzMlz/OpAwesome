@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		086D7E082B220C50003886C6 /* ArcadeGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086D7E072B220C50003886C6 /* ArcadeGameView.swift */; };
+		086D7E0A2B220C66003886C6 /* ArcadeGameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086D7E092B220C66003886C6 /* ArcadeGameScene.swift */; };
+		086D7E0C2B220D15003886C6 /* ArcadeGameLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086D7E0B2B220D15003886C6 /* ArcadeGameLogic.swift */; };
+		086D7E102B220DB2003886C6 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086D7E0F2B220DB2003886C6 /* Constants.swift */; };
+		086D7E122B220E22003886C6 /* GameDurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086D7E112B220E22003886C6 /* GameDurationView.swift */; };
+		086D7E142B220E68003886C6 /* GameScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086D7E132B220E68003886C6 /* GameScoreView.swift */; };
+		086D7E172B221638003886C6 /* MainScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086D7E162B221638003886C6 /* MainScreenView.swift */; };
+		086D7E1A2B22166D003886C6 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086D7E192B22166D003886C6 /* GameOverView.swift */; };
 		2E004EFF2B20D08A007EF8EB /* OpAwesomeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E004EFE2B20D08A007EF8EB /* OpAwesomeApp.swift */; };
 		2E004F012B20D08A007EF8EB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E004F002B20D08A007EF8EB /* ContentView.swift */; };
 		2E004F032B20D08B007EF8EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E004F022B20D08B007EF8EB /* Assets.xcassets */; };
@@ -14,6 +22,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		086D7E072B220C50003886C6 /* ArcadeGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadeGameView.swift; sourceTree = "<group>"; };
+		086D7E092B220C66003886C6 /* ArcadeGameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadeGameScene.swift; sourceTree = "<group>"; };
+		086D7E0B2B220D15003886C6 /* ArcadeGameLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadeGameLogic.swift; sourceTree = "<group>"; };
+		086D7E0F2B220DB2003886C6 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		086D7E112B220E22003886C6 /* GameDurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDurationView.swift; sourceTree = "<group>"; };
+		086D7E132B220E68003886C6 /* GameScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScoreView.swift; sourceTree = "<group>"; };
+		086D7E162B221638003886C6 /* MainScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenView.swift; sourceTree = "<group>"; };
+		086D7E192B22166D003886C6 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
 		2E004EFB2B20D08A007EF8EB /* OpAwesome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpAwesome.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E004EFE2B20D08A007EF8EB /* OpAwesomeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpAwesomeApp.swift; sourceTree = "<group>"; };
 		2E004F002B20D08A007EF8EB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -32,6 +48,42 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		086D7E062B220C38003886C6 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				086D7E072B220C50003886C6 /* ArcadeGameView.swift */,
+				086D7E132B220E68003886C6 /* GameScoreView.swift */,
+				086D7E112B220E22003886C6 /* GameDurationView.swift */,
+				086D7E0B2B220D15003886C6 /* ArcadeGameLogic.swift */,
+				086D7E092B220C66003886C6 /* ArcadeGameScene.swift */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		086D7E0E2B220D8D003886C6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				086D7E0F2B220DB2003886C6 /* Constants.swift */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		086D7E152B22161D003886C6 /* Main Screen */ = {
+			isa = PBXGroup;
+			children = (
+				086D7E162B221638003886C6 /* MainScreenView.swift */,
+			);
+			path = "Main Screen";
+			sourceTree = "<group>";
+		};
+		086D7E182B22165D003886C6 /* Game Over */ = {
+			isa = PBXGroup;
+			children = (
+				086D7E192B22166D003886C6 /* GameOverView.swift */,
+			);
+			path = "Game Over";
+			sourceTree = "<group>";
+		};
 		2E004EF22B20D08A007EF8EB = {
 			isa = PBXGroup;
 			children = (
@@ -51,8 +103,12 @@
 		2E004EFD2B20D08A007EF8EB /* OpAwesome */ = {
 			isa = PBXGroup;
 			children = (
+				086D7E182B22165D003886C6 /* Game Over */,
 				2E004EFE2B20D08A007EF8EB /* OpAwesomeApp.swift */,
 				2E004F002B20D08A007EF8EB /* ContentView.swift */,
+				086D7E152B22161D003886C6 /* Main Screen */,
+				086D7E0E2B220D8D003886C6 /* Supporting Files */,
+				086D7E062B220C38003886C6 /* Game */,
 				2E004F022B20D08B007EF8EB /* Assets.xcassets */,
 				2E004F042B20D08B007EF8EB /* Preview Content */,
 			);
@@ -137,8 +193,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				086D7E1A2B22166D003886C6 /* GameOverView.swift in Sources */,
+				086D7E0A2B220C66003886C6 /* ArcadeGameScene.swift in Sources */,
 				2E004F012B20D08A007EF8EB /* ContentView.swift in Sources */,
+				086D7E082B220C50003886C6 /* ArcadeGameView.swift in Sources */,
 				2E004EFF2B20D08A007EF8EB /* OpAwesomeApp.swift in Sources */,
+				086D7E172B221638003886C6 /* MainScreenView.swift in Sources */,
+				086D7E0C2B220D15003886C6 /* ArcadeGameLogic.swift in Sources */,
+				086D7E102B220DB2003886C6 /* Constants.swift in Sources */,
+				086D7E122B220E22003886C6 /* GameDurationView.swift in Sources */,
+				086D7E142B220E68003886C6 /* GameScoreView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,7 +336,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"OpAwesome/Preview Content\"";
-				DEVELOPMENT_TEAM = 8FW56V9S55;
+				DEVELOPMENT_TEAM = C784BSN9V5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -285,7 +349,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.lalo.OpAwesome;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lalo.OpAwesomeeee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -301,7 +365,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"OpAwesome/Preview Content\"";
-				DEVELOPMENT_TEAM = 8FW56V9S55;
+				DEVELOPMENT_TEAM = C784BSN9V5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -314,7 +378,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.lalo.OpAwesome;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lalo.OpAwesomeeee;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
