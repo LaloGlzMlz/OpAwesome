@@ -31,15 +31,22 @@ class ArcadeGameScene: SKScene {
         var mapNode: SKSpriteNode!
 
         override func didMove(to view: SKView) {
+            
+            let playerTexture = SKTexture(imageNamed: "OpossumDownFrame")
+            let mapTexture = SKTexture(imageNamed: "Map")
+            
             // Create the player node
-            player = SKSpriteNode(color: .blue, size: CGSize(width: 50, height: 50))
+            player = SKSpriteNode(texture: playerTexture)
+            player.size = CGSize(width: 75, height: 75)
             player.position = CGPoint(x: size.width / 2, y: size.height / 2)
-            addChild(player)
+            
 
             // Create the map node
-            let mapTexture = SKTexture(imageNamed: "map")
             mapNode = SKSpriteNode(texture: mapTexture)
+            mapNode.size = CGSize(width: 1800, height: 1800)
+            mapNode.position = CGPoint(x: size.width / 2, y: size.height / 2)
             addChild(mapNode)
+            addChild(player)
 
             // Create the joystick base
             joystickBase = SKShapeNode(circleOfRadius: 50)
@@ -48,7 +55,7 @@ class ArcadeGameScene: SKScene {
 
             // Create the joystick knob
             joystickKnob = SKShapeNode(circleOfRadius: 25)
-            joystickKnob?.fillColor = .green
+            joystickKnob?.fillColor = .clear
             joystickKnob?.position = joystickBase.position
             addChild(joystickKnob!)
         }
