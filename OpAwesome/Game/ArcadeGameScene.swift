@@ -47,6 +47,11 @@ class ArcadeGameScene: SKScene {
             
             player.size = CGSize(width: 75, height: 75)
             player.position = CGPoint(x: size.width / 2, y: size.height / 2)
+            player.physicsBody = SKPhysicsBody(circleOfRadius:  40)
+            player.physicsBody?.categoryBitMask = PhysicsCategroy.player
+            player.physicsBody?.contactTestBitMask = PhysicsCategroy.fruits
+            player.physicsBody?.collisionBitMask = PhysicsCategroy.fruits
+            player.physicsBody?.affectedByGravity = false
             
 
             // Create the map node
@@ -58,7 +63,7 @@ class ArcadeGameScene: SKScene {
 
             // Create the joystick base
             joystickBase = SKShapeNode(circleOfRadius: 50)
-            joystickBase.position = CGPoint(x: -100, y: -300)
+            joystickBase.position = CGPoint(x: -300, y: -100)
             joystickBase.zPosition = 5
             gameCamera.addChild(joystickBase)
 
@@ -70,6 +75,7 @@ class ArcadeGameScene: SKScene {
             gameCamera.addChild(joystickKnob!)
             
             
+            setUpPhysicsWorld()
             generateFruit()
         }
 
@@ -110,6 +116,7 @@ class ArcadeGameScene: SKScene {
         override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
             joystickKnob?.position = joystickBase.position
             joystickActive = false
+            player.physicsBody?.velocity = .zero
         }
     
     //Fruit spawning
@@ -117,7 +124,14 @@ class ArcadeGameScene: SKScene {
         let newFruitPosition = randomFruitPosition()
         let newFruit = SKSpriteNode(imageNamed: "apple")
         
+        
+        newFruit.name = "fruit"
         newFruit.position = newFruitPosition
+        newFruit.physicsBody = SKPhysicsBody(circleOfRadius: 5)
+        newFruit.physicsBody?.categoryBitMask = PhysicsCategroy.fruits
+        newFruit.physicsBody?.contactTestBitMask = PhysicsCategroy.player
+        newFruit.physicsBody?.collisionBitMask = PhysicsCategroy.player
+        newFruit.physicsBody?.affectedByGravity = false
         
         addChild(newFruit)
         
@@ -125,7 +139,7 @@ class ArcadeGameScene: SKScene {
     
     private func randomFruitPosition() -> CGPoint{
         var position = player.position
-        position.x += 3
+        position.x += 200
         return position
         
         //TODO: Replace code to generate actual random positions
@@ -135,16 +149,40 @@ class ArcadeGameScene: SKScene {
     
     func movePlayer(vector: CGVector) {
         
-        let speed: CGFloat = 5.0
+        let speed: CGFloat = 100
         
-        player.position.x += vector.dx * speed
-        player.position.y += vector.dy * speed
+        player.physicsBody?.velocity = CGVector(dx: vector.dx * speed, dy: vector.dy * speed)
     }
     
+ 
     
     override func update(_ currentTime: TimeInterval) {
         
         //To make the camera follow the player
         gameCamera.position = player.position
+    }
+    
+    private func setUpPhysicsWorld() {
+        physicsWorld.gravity = .zero
+        physicsWorld.contactDelegate = self
+    }
+}
+
+
+extension ArcadeGameScene: SKPhysicsContactDelegate {
+    //To manage the behavior in respons to two physics bodies having contact
+    func didBegin(_ contact: SKPhysicsContact) {
+        print("Contact happened!")
+        
+        let firstBody: SKPhysicsBody = contact.bodyA
+        let secondBody: SKPhysicsBody = contact.bodyB
+        
+        if let node = firstBody.node, node.name == "fruit" {
+            node.removeFromParent()
+        }
+        
+        if let node = secondBody.node, node.name == "fruit" {
+            node.removeFromParent()
+        }
     }
 }
