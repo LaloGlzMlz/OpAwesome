@@ -18,6 +18,8 @@ struct PhysicsCategroy{
     static let predators : UInt32 = 0b11
     static let walls : UInt32 = 0b100
 }
+
+
 class ArcadeGameScene: SKScene {
     //var gameLogic: ArcadeGameLogic = ArcadeGameLogic.shared
     //var lastUpdate: TimeInterval = 0
@@ -29,14 +31,20 @@ class ArcadeGameScene: SKScene {
         var joystickKnob: SKShapeNode?
         var joystickActive: Bool = false
         var mapNode: SKSpriteNode!
+    
+    var gameCamera = SKCameraNode()
 
         override func didMove(to view: SKView) {
             
             let playerTexture = SKTexture(imageNamed: "OpossumDownFrame")
             let mapTexture = SKTexture(imageNamed: "Map")
+            self.camera = gameCamera
+            addChild(gameCamera)
             
             // Create the player node
             player = SKSpriteNode(texture: playerTexture)
+            print("player gets created")
+            
             player.size = CGSize(width: 75, height: 75)
             player.position = CGPoint(x: size.width / 2, y: size.height / 2)
             
@@ -50,21 +58,26 @@ class ArcadeGameScene: SKScene {
 
             // Create the joystick base
             joystickBase = SKShapeNode(circleOfRadius: 50)
-            joystickBase.position = CGPoint(x: 100, y: 100)
-            addChild(joystickBase)
+            joystickBase.position = CGPoint(x: -100, y: -300)
+            joystickBase.zPosition = 5
+            gameCamera.addChild(joystickBase)
 
             // Create the joystick knob
             joystickKnob = SKShapeNode(circleOfRadius: 25)
-            joystickKnob?.fillColor = .clear
+            joystickKnob?.fillColor = .white
             joystickKnob?.position = joystickBase.position
-            addChild(joystickKnob!)
+            joystickKnob?.zPosition = 5
+            gameCamera.addChild(joystickKnob!)
+            
+            
+            generateFruit()
         }
 
         override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
             for touch in touches {
                 let location = touch.location(in: self)
 
-                if joystickBase.contains(location) {
+                if let touchedNode = atPoint(location) as? SKShapeNode, touchedNode == joystickBase || touchedNode == joystickKnob {
                     joystickActive = true
                 }
             }
@@ -74,7 +87,7 @@ class ArcadeGameScene: SKScene {
             guard let joystickKnob = joystickKnob, joystickActive else { return }
 
             for touch in touches {
-                let location = touch.location(in: self)
+                let location = touch.location(in: self.gameCamera)
                 let angle = atan2(location.y - joystickBase.position.y, location.x - joystickBase.position.x)
                 let length = joystickBase.frame.size.width / 2
 
@@ -89,10 +102,8 @@ class ArcadeGameScene: SKScene {
                     joystickKnob.position = CGPoint(x: joystickBase.position.x + cos(angle) * length, y: joystickBase.position.y + sin(angle) * length)
                 }
 
-                // Move the map in the opposite direction to create the effect of the map moving under the player
-                let speed: CGFloat = 5.0
-                mapNode.position.x -= cos(angle) * speed
-                mapNode.position.y -= sin(angle) * speed
+                // Move the player
+                movePlayer(vector: CGVector(dx: cos(angle), dy: sin(angle)))
             }
         }
 
@@ -100,6 +111,40 @@ class ArcadeGameScene: SKScene {
             joystickKnob?.position = joystickBase.position
             joystickActive = false
         }
-
-        // Other game logic and methods can go here
+    
+    //Fruit spawning
+    private func generateFruit() {
+        let newFruitPosition = randomFruitPosition()
+        let newFruit = SKSpriteNode(imageNamed: "apple")
+        
+        newFruit.position = newFruitPosition
+        
+        addChild(newFruit)
+        
     }
+    
+    private func randomFruitPosition() -> CGPoint{
+        var position = player.position
+        position.x += 3
+        return position
+        
+        //TODO: Replace code to generate actual random positions
+    }
+    
+        // Other game logic and methods can go here
+    
+    func movePlayer(vector: CGVector) {
+        
+        let speed: CGFloat = 5.0
+        
+        player.position.x += vector.dx * speed
+        player.position.y += vector.dy * speed
+    }
+    
+    
+    override func update(_ currentTime: TimeInterval) {
+        
+        //To make the camera follow the player
+        gameCamera.position = player.position
+    }
+}

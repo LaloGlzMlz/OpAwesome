@@ -59,25 +59,27 @@ struct ArcadeGameView: View {
                 .statusBar(hidden: true)
             
             //Image("Frame 2")
-            HStack() {
-                /**
-                 * UI element showing the duration of the game session.
-                 * Remove it if your game is not based on time.
-                 */
-                GameDurationView(time: $gameLogic.sessionDuration)
-                
-                Spacer()
-                
-                /**
-                 * UI element showing the current score of the player.
-                 * Remove it if your game is not based on scoring points.
-                 */
-                GameScoreView(score: $gameLogic.currentScore)
+            VStack {
+                HStack() {
+                    /**
+                     * UI element showing the duration of the game session.
+                     * Remove it if your game is not based on time.
+                     */
+                    GameDurationView(time: $gameLogic.sessionDuration)
+                    
+                    Spacer()
+                    
+                    /**
+                     * UI element showing the current score of the player.
+                     * Remove it if your game is not based on scoring points.
+                     */
+                    GameScoreView(score: $gameLogic.currentScore)
 
-            }
-            .padding()
-            //.padding(.top, 40)
+                }
+                .padding()
+                //.padding(.top, 40)
             .frame(width: 400)
+            }
         }
 
         .onChange(of: gameLogic.isGameOver) { _ in
