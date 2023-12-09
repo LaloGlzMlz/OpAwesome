@@ -118,5 +118,6 @@ struct ArcadeGameView: View {
 
 #Preview {
     ArcadeGameView(currentGameState: .constant(GameState.playing))
+        .previewInterfaceOrientation(.landscapeLeft)
 }
 
