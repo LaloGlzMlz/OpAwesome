@@ -21,8 +21,8 @@ struct PhysicsCategroy{
 
 
 class ArcadeGameScene: SKScene {
-    //var gameLogic: ArcadeGameLogic = ArcadeGameLogic.shared
-    //var lastUpdate: TimeInterval = 0
+    var gameLogic: ArcadeGameLogic = ArcadeGameLogic.shared
+    var lastUpdate: TimeInterval = 0
     
     //var player: SKSpriteNode!
     
@@ -54,12 +54,23 @@ class ArcadeGameScene: SKScene {
             player.physicsBody?.affectedByGravity = false
             
 
+            
+
             // Create the map node
             mapNode = SKSpriteNode(texture: mapTexture)
             mapNode.size = CGSize(width: 1800, height: 1800)
             mapNode.position = CGPoint(x: size.width / 2, y: size.height / 2)
             addChild(mapNode)
             addChild(player)
+            
+            //Create the movement constraints for the player (player can't exit the map)
+            let xRange = SKRange(lowerLimit: -mapNode.size.width / 2, upperLimit: mapNode.size.width / 2)
+            let yRange = SKRange(lowerLimit: -mapNode.size.height / 2, upperLimit: mapNode.size.width / 2)
+            let xConstraint = SKConstraint.positionX(xRange)
+            let yConstraint = SKConstraint.positionY(yRange)
+            
+            player.constraints = [xConstraint, yConstraint]
+            
 
             // Create the joystick base
             joystickBase = SKShapeNode(circleOfRadius: 50)
@@ -76,7 +87,7 @@ class ArcadeGameScene: SKScene {
             
             
             setUpPhysicsWorld()
-            generateFruit()
+            startFruitCycle()
         }
 
         override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -120,6 +131,17 @@ class ArcadeGameScene: SKScene {
         }
     
     //Fruit spawning
+    
+    private func startFruitCycle() {
+        let createFruitAction = SKAction.run(generateFruit)
+        let waitAction = SKAction.wait(forDuration: 5.0)
+        
+        let createAndWaitAction = SKAction.sequence([createFruitAction, waitAction])
+        let fruitCycleAction = SKAction.repeatForever(createAndWaitAction)
+        
+        run(fruitCycleAction)
+    }
+    
     private func generateFruit() {
         let newFruitPosition = randomFruitPosition()
         let newFruit = SKSpriteNode(imageNamed: "apple")
@@ -138,8 +160,11 @@ class ArcadeGameScene: SKScene {
     }
     
     private func randomFruitPosition() -> CGPoint{
-        var position = player.position
-        position.x += 200
+        let xSpawnRange = -mapNode.size.width / 2 + 30 ... mapNode.size.width / 2 - 30
+        let ySpawnRange = -mapNode.size.height / 2 + 30 ... mapNode.size.height / 2 - 30
+        
+        let position = CGPoint(x: CGFloat.random(in: xSpawnRange), y: CGFloat.random(in: ySpawnRange))
+        
         return position
         
         //TODO: Replace code to generate actual random positions
@@ -160,6 +185,19 @@ class ArcadeGameScene: SKScene {
         
         //To make the camera follow the player
         gameCamera.position = player.position
+        
+        //To increase the timer counter
+        
+        // The first time the update function is called we must initialize the
+        // lastUpdate variable
+        if self.lastUpdate == 0 { self.lastUpdate = currentTime }
+        
+        // Calculates how much time has passed since the last update
+        let timeElapsedSinceLastUpdate = currentTime - self.lastUpdate
+        // Increments the length of the game session at the game logic
+        self.gameLogic.increaseSessionTime(by: timeElapsedSinceLastUpdate)
+        
+        self.lastUpdate = currentTime
     }
     
     private func setUpPhysicsWorld() {
@@ -179,10 +217,12 @@ extension ArcadeGameScene: SKPhysicsContactDelegate {
         
         if let node = firstBody.node, node.name == "fruit" {
             node.removeFromParent()
+            gameLogic.score(points: 1)
         }
         
         if let node = secondBody.node, node.name == "fruit" {
             node.removeFromParent()
+            gameLogic.score(points: 1)
         }
     }
 }
