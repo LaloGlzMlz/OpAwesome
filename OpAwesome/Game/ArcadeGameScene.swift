@@ -8,7 +8,7 @@
 import SpriteKit
 import SwiftUI
 
-struct PhysicsCategroy{
+struct PhysicsCategory{
     // how we will identify the elements in the game
     // how I know the asteroid is an asteroid
     static let none : UInt32 = 0
@@ -16,7 +16,7 @@ struct PhysicsCategroy{
     static let player : UInt32 = 0b1
     static let fruits : UInt32 = 0b10
     static let predators : UInt32 = 0b11
-    static let walls : UInt32 = 0b100
+    static let wall : UInt32 = 0b100
 }
 
 
@@ -36,7 +36,7 @@ class ArcadeGameScene: SKScene {
 
         override func didMove(to view: SKView) {
             
-            let playerTexture = SKTexture(imageNamed: "OpossumDownFrame")
+            let playerTexture = SKTexture(imageNamed: "test")
             let mapTexture = SKTexture(imageNamed: "Map")
             self.camera = gameCamera
             addChild(gameCamera)
@@ -47,10 +47,11 @@ class ArcadeGameScene: SKScene {
             
             player.size = CGSize(width: 75, height: 75)
             player.position = CGPoint(x: size.width / 2, y: size.height / 2)
-            player.physicsBody = SKPhysicsBody(circleOfRadius:  40)
-            player.physicsBody?.categoryBitMask = PhysicsCategroy.player
-            player.physicsBody?.contactTestBitMask = PhysicsCategroy.fruits
-            player.physicsBody?.collisionBitMask = PhysicsCategroy.fruits
+            player.physicsBody = SKPhysicsBody(texture: playerTexture, size: player.size) // collidable area mapped to alpha channel of sprite
+            player.physicsBody?.categoryBitMask = PhysicsCategory.player
+            player.physicsBody?.contactTestBitMask = PhysicsCategory.fruits
+            player.physicsBody?.collisionBitMask = PhysicsCategory.wall | PhysicsCategory.fruits
+            player.physicsBody?.allowsRotation = false
             player.physicsBody?.affectedByGravity = false
             
 
@@ -88,6 +89,21 @@ class ArcadeGameScene: SKScene {
             
             setUpPhysicsWorld()
             startFruitCycle()
+            createWall()
+        }
+    
+        func createWall() {
+            let wallSize = CGSize(width: 200, height: 20)
+            let wall = SKSpriteNode(color: .blue, size: wallSize)
+            wall.position = CGPoint(x: size.width / 2, y: size.height / 2)
+
+            wall.physicsBody = SKPhysicsBody(rectangleOf: wallSize)
+            wall.physicsBody?.isDynamic = false
+            wall.physicsBody?.categoryBitMask = PhysicsCategory.wall
+            wall.physicsBody?.contactTestBitMask = PhysicsCategory.player
+            wall.physicsBody?.collisionBitMask = PhysicsCategory.player
+
+            addChild(wall)
         }
 
         override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -150,9 +166,9 @@ class ArcadeGameScene: SKScene {
         newFruit.name = "fruit"
         newFruit.position = newFruitPosition
         newFruit.physicsBody = SKPhysicsBody(circleOfRadius: 5)
-        newFruit.physicsBody?.categoryBitMask = PhysicsCategroy.fruits
-        newFruit.physicsBody?.contactTestBitMask = PhysicsCategroy.player
-        newFruit.physicsBody?.collisionBitMask = PhysicsCategroy.player
+        newFruit.physicsBody?.categoryBitMask = PhysicsCategory.fruits
+        newFruit.physicsBody?.contactTestBitMask = PhysicsCategory.player
+        newFruit.physicsBody?.collisionBitMask = PhysicsCategory.player
         newFruit.physicsBody?.affectedByGravity = false
         
         addChild(newFruit)
@@ -223,6 +239,12 @@ extension ArcadeGameScene: SKPhysicsContactDelegate {
         if let node = secondBody.node, node.name == "fruit" {
             node.removeFromParent()
             gameLogic.score(points: 1)
+        }
+        
+        let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+
+        if collision == PhysicsCategory.wall | PhysicsCategory.player {
+            print("Player collided with the wall")
         }
     }
 }
