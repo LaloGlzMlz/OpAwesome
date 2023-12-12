@@ -23,6 +23,7 @@ struct PhysicsCategory{
 class ArcadeGameScene: SKScene {
     var gameLogic: ArcadeGameLogic = ArcadeGameLogic.shared
     var lastUpdate: TimeInterval = 0
+    //var side:screenSide = .left
     
     //var player: SKSpriteNode!
     
@@ -32,6 +33,8 @@ class ArcadeGameScene: SKScene {
         var joystickKnob: SKShapeNode?
         var joystickActive: Bool = false
         var mapNode: SKSpriteNode!
+        var fakedeathButton: SKShapeNode?
+        var buttonActive: Bool = false
     var enemies: [SKSpriteNode] = []
     
     var gameCamera = SKCameraNode()
@@ -90,6 +93,12 @@ class ArcadeGameScene: SKScene {
             joystickKnob?.zPosition = 5
             gameCamera.addChild(joystickKnob!)
             
+            // Create the button for faking death
+            fakedeathButton = SKShapeNode(circleOfRadius: 50)
+            fakedeathButton?.fillColor = .red
+            fakedeathButton?.position = CGPoint(x: 300, y: -100)
+            fakedeathButton?.zPosition = 5
+            gameCamera.addChild(fakedeathButton!)
             //Create the enemy
             createEnemies()
             
@@ -112,17 +121,54 @@ class ArcadeGameScene: SKScene {
 
             addChild(wall)
         }
-
-        override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+       
             for touch in touches {
                 let location = touch.location(in: self)
-
-                if let touchedNode = atPoint(location) as? SKShapeNode, touchedNode == joystickBase || touchedNode == joystickKnob {
+                
+                //When you touch the joystick
+                if let touchedNode = atPoint(location) as? SKShapeNode, touchedNode == joystickBase || touchedNode == joystickKnob && buttonActive == false{
                     joystickActive = true
                 }
+                
+                //When you touch the fake death button
+                if let touchedNode = atPoint(location) as? SKShapeNode, touchedNode == fakedeathButton {
+                    
+                    //When you activate the button
+                    if buttonActive==false {
+                        
+                        if gameLogic.currentScore > 0 {
+                            print("QUICK! FAKE DEATH!")
+                            buttonActive = true
+                            fakedeathButton?.fillColor = .green
+                            joystickKnob?.position = CGPoint(x: -300, y: -100)
+                            joystickKnob?.alpha = 0.4
+                            let eatApple = SKAction.run {
+                                self.gameLogic.currentScore -= 1
+                            }
+                            let wait = SKAction.wait(forDuration: 1)
+                            let fullAction = SKAction.sequence([eatApple, wait])
+                            
+                            fakedeathButton!.run(SKAction.repeatForever(fullAction), withKey: ActionKeys.eating.rawValue)
+                        }else{
+                                print("Grab more apples!")
+                            }
+                        
+                    }else{ //When you turn off the button
+                       turnOffButton()
+                    }
+                    
+                    
+                    }
+                
+                }
             }
-        }
+        
+ 
 
+    
         override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
             guard let joystickKnob = joystickKnob, joystickActive else { return }
 
@@ -226,10 +272,15 @@ class ArcadeGameScene: SKScene {
             
             let viewCone = enemy.children.first(where: {node in node.name == "fieldOfView"})
             if viewCone?.contains(playerRelativePosition) ?? false {
-                gameOver()
+                IsGameOver()
             }
             
         }
+        
+        if buttonActive==true && gameLogic.currentScore == 0 {
+            turnOffButton()
+        }
+        
     }
     
     private func setUpPhysicsWorld() {
@@ -358,7 +409,8 @@ extension ArcadeGameScene: SKPhysicsContactDelegate {
         
         if (firstBody.categoryBitMask == PhysicsCategory.player && secondBody.categoryBitMask == PhysicsCategory.predators) ||
             (firstBody.categoryBitMask == PhysicsCategory.predators && secondBody.categoryBitMask == PhysicsCategory.player) {
-            gameLogic.isGameOver = true
+            IsGameOver()
+            
             print("game over")
         }
         
@@ -374,8 +426,25 @@ extension ArcadeGameScene: SKPhysicsContactDelegate {
         print("mannacc mannacc")
         gameLogic.isGameOver = true
     }
+    
+    func IsGameOver(){
+        if buttonActive==false {
+            print("NOO")
+            gameOver()
+        }else{
+            print("nicee")
+        }
+    }
+    
+    func turnOffButton() {
+        print("RUN POSSUM, RUN!")
+        buttonActive = false
+        fakedeathButton?.fillColor = .red
+        joystickKnob?.alpha = 1
+        fakedeathButton?.removeAction(forKey: ActionKeys.eating.rawValue)
+    }
 }
 
 enum ActionKeys: String {
-    case animation, movement
+    case animation, movement, eating
 }
