@@ -36,7 +36,7 @@ class ArcadeGameScene: SKScene {
 
         override func didMove(to view: SKView) {
             
-            let playerTexture = SKTexture(imageNamed: "test")
+            let playerTexture = SKTexture(imageNamed: "OpossumDownFrame")
             let mapTexture = SKTexture(imageNamed: "Map")
             self.camera = gameCamera
             addChild(gameCamera)
@@ -46,7 +46,7 @@ class ArcadeGameScene: SKScene {
             print("player gets created")
             
             player.size = CGSize(width: 75, height: 75)
-            player.position = CGPoint(x: size.width / 2, y: size.height / 2)
+            player.position = CGPoint(x: size.width / 1.5, y: size.height / 2)
             player.physicsBody = SKPhysicsBody(texture: playerTexture, size: player.size) // collidable area mapped to alpha channel of sprite
             player.physicsBody?.categoryBitMask = PhysicsCategory.player
             player.physicsBody?.contactTestBitMask = PhysicsCategory.fruits
@@ -93,9 +93,9 @@ class ArcadeGameScene: SKScene {
         }
     
         func createWall() {
-            let wallSize = CGSize(width: 200, height: 20)
+            let wallSize = CGSize(width: 200, height: 250)
             let wall = SKSpriteNode(color: .blue, size: wallSize)
-            wall.position = CGPoint(x: size.width / 2, y: size.height / 2)
+            wall.position = CGPoint(x: size.width / 1, y: size.height / 1)
 
             wall.physicsBody = SKPhysicsBody(rectangleOf: wallSize)
             wall.physicsBody?.isDynamic = false
@@ -190,7 +190,7 @@ class ArcadeGameScene: SKScene {
     
     func movePlayer(vector: CGVector) {
         
-        let speed: CGFloat = 100
+        let speed: CGFloat = 150
         
         player.physicsBody?.velocity = CGVector(dx: vector.dx * speed, dy: vector.dy * speed)
     }
