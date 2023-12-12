@@ -8,7 +8,7 @@
 import SpriteKit
 import SwiftUI
 
-struct PhysicsCategroy{
+struct PhysicsCategory{
     // how we will identify the elements in the game
     // how I know the asteroid is an asteroid
     static let none : UInt32 = 0
@@ -23,6 +23,7 @@ struct PhysicsCategroy{
 class ArcadeGameScene: SKScene {
     var gameLogic: ArcadeGameLogic = ArcadeGameLogic.shared
     var lastUpdate: TimeInterval = 0
+    //var side:screenSide = .left
     
     //var player: SKSpriteNode!
     
@@ -31,6 +32,8 @@ class ArcadeGameScene: SKScene {
         var joystickKnob: SKShapeNode?
         var joystickActive: Bool = false
         var mapNode: SKSpriteNode!
+        var fakedeathButton: SKShapeNode?
+        var buttonActive: Bool = false
     
     var gameCamera = SKCameraNode()
 
@@ -48,9 +51,9 @@ class ArcadeGameScene: SKScene {
             player.size = CGSize(width: 75, height: 75)
             player.position = CGPoint(x: size.width / 2, y: size.height / 2)
             player.physicsBody = SKPhysicsBody(circleOfRadius:  40)
-            player.physicsBody?.categoryBitMask = PhysicsCategroy.player
-            player.physicsBody?.contactTestBitMask = PhysicsCategroy.fruits
-            player.physicsBody?.collisionBitMask = PhysicsCategroy.fruits
+            player.physicsBody?.categoryBitMask = PhysicsCategory.player
+            player.physicsBody?.contactTestBitMask = PhysicsCategory.fruits
+            player.physicsBody?.collisionBitMask = PhysicsCategory.fruits
             player.physicsBody?.affectedByGravity = false
             
 
@@ -85,21 +88,55 @@ class ArcadeGameScene: SKScene {
             joystickKnob?.zPosition = 5
             gameCamera.addChild(joystickKnob!)
             
+            // Create the button for faking death
+            fakedeathButton = SKShapeNode(circleOfRadius: 50)
+            fakedeathButton?.fillColor = .red
+            fakedeathButton?.position = CGPoint(x: 300, y: -100)
+            fakedeathButton?.zPosition = 5
+            gameCamera.addChild(fakedeathButton!)
+            
             
             setUpPhysicsWorld()
             startFruitCycle()
         }
-
-        override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+       
             for touch in touches {
                 let location = touch.location(in: self)
-
-                if let touchedNode = atPoint(location) as? SKShapeNode, touchedNode == joystickBase || touchedNode == joystickKnob {
+                
+                //When you touch the joystick
+                if let touchedNode = atPoint(location) as? SKShapeNode, touchedNode == joystickBase || touchedNode == joystickKnob && buttonActive == false{
                     joystickActive = true
                 }
+                
+                //When you touch the fake death button
+                if let touchedNode = atPoint(location) as? SKShapeNode, touchedNode == fakedeathButton {
+                    
+                    //When you activate the button
+                    if buttonActive==false {
+                        print("QUICK! FAKE DEATH!")
+                        buttonActive = true
+                        fakedeathButton?.fillColor = .green
+                        joystickKnob?.position = CGPoint(x: -300, y: -100)
+                        joystickKnob?.alpha = 0.4
+                    }else{ //When you turn off the button
+                        print("RUN POSSUM, RUN!")
+                        buttonActive = false
+                        fakedeathButton?.fillColor = .red
+                        joystickKnob?.alpha = 1
+                    }
+                    
+                    
+                    }
+                
+                }
             }
-        }
+        
+ 
 
+    
         override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
             guard let joystickKnob = joystickKnob, joystickActive else { return }
 
@@ -150,9 +187,9 @@ class ArcadeGameScene: SKScene {
         newFruit.name = "fruit"
         newFruit.position = newFruitPosition
         newFruit.physicsBody = SKPhysicsBody(circleOfRadius: 5)
-        newFruit.physicsBody?.categoryBitMask = PhysicsCategroy.fruits
-        newFruit.physicsBody?.contactTestBitMask = PhysicsCategroy.player
-        newFruit.physicsBody?.collisionBitMask = PhysicsCategroy.player
+        newFruit.physicsBody?.categoryBitMask = PhysicsCategory.fruits
+        newFruit.physicsBody?.contactTestBitMask = PhysicsCategory.player
+        newFruit.physicsBody?.collisionBitMask = PhysicsCategory.player
         newFruit.physicsBody?.affectedByGravity = false
         
         addChild(newFruit)
