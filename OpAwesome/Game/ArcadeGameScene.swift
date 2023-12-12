@@ -23,181 +23,229 @@ struct PhysicsCategory{
 class ArcadeGameScene: SKScene {
     var gameLogic: ArcadeGameLogic = ArcadeGameLogic.shared
     var lastUpdate: TimeInterval = 0
-    //var side:screenSide = .left
-    
-    //var player: SKSpriteNode!
-    
     var player: SKSpriteNode!
     var movementWhithinMap: [SKConstraint]!
-        var joystickBase: SKShapeNode!
-        var joystickKnob: SKShapeNode?
-        var joystickActive: Bool = false
-        var mapNode: SKSpriteNode!
-        var fakedeathButton: SKShapeNode?
-        var buttonActive: Bool = false
+    var joystickBase: SKShapeNode!
+    var joystickKnob: SKShapeNode?
+    var joystickActive: Bool = false
+    var mapNode: SKSpriteNode!
+    var fakedeathButton: SKShapeNode?
+    var buttonActive: Bool = false
     var enemies: [SKSpriteNode] = []
     
-    var gameCamera = SKCameraNode()
-
-        override func didMove(to view: SKView) {
-            
-            let playerTexture = SKTexture(imageNamed: "OpossumDownFrame")
-            let mapTexture = SKTexture(imageNamed: "Map")
-            self.camera = gameCamera
-            addChild(gameCamera)
-            
-            // Create the player node
-            player = SKSpriteNode(texture: playerTexture)
-            print("player gets created")
-            
-            player.size = CGSize(width: 75, height: 75)
-            player.position = CGPoint(x: size.width / 1.5, y: size.height / 2)
-            player.physicsBody = SKPhysicsBody(texture: playerTexture, size: player.size) // collidable area mapped to alpha channel of sprite
-            player.physicsBody?.categoryBitMask = PhysicsCategory.player
-            player.physicsBody?.contactTestBitMask = PhysicsCategory.fruits
-            player.physicsBody?.collisionBitMask = PhysicsCategory.wall | PhysicsCategory.fruits
-            player.physicsBody?.allowsRotation = false
-            player.physicsBody?.affectedByGravity = false
-            player.physicsBody?.allowsRotation = false
-            
-
-            
-
-            // Create the map node
-            mapNode = SKSpriteNode(texture: mapTexture)
-            mapNode.size = CGSize(width: 1800, height: 1800)
-            mapNode.position = CGPoint(x: size.width / 2, y: size.height / 2)
-            addChild(mapNode)
-            addChild(player)
-            
-            //Create the movement constraints for the player (player can't exit the map)
-            let xRange = SKRange(lowerLimit: -mapNode.size.width / 2, upperLimit: mapNode.size.width / 2)
-            let yRange = SKRange(lowerLimit: -mapNode.size.height / 2, upperLimit: mapNode.size.width / 2)
-            let xConstraint = SKConstraint.positionX(xRange)
-            let yConstraint = SKConstraint.positionY(yRange)
-            movementWhithinMap = [xConstraint, yConstraint]
-            
-            player.constraints = [xConstraint, yConstraint]
-            
-
-            // Create the joystick base
-            joystickBase = SKShapeNode(circleOfRadius: 50)
-            joystickBase.position = CGPoint(x: -300, y: -100)
-            joystickBase.zPosition = 5
-            gameCamera.addChild(joystickBase)
-
-            // Create the joystick knob
-            joystickKnob = SKShapeNode(circleOfRadius: 25)
-            joystickKnob?.fillColor = .white
-            joystickKnob?.position = joystickBase.position
-            joystickKnob?.zPosition = 5
-            gameCamera.addChild(joystickKnob!)
-            
-            // Create the button for faking death
-            fakedeathButton = SKShapeNode(circleOfRadius: 50)
-            fakedeathButton?.fillColor = .red
-            fakedeathButton?.position = CGPoint(x: 300, y: -100)
-            fakedeathButton?.zPosition = 5
-            gameCamera.addChild(fakedeathButton!)
-            //Create the enemy
-            createEnemies()
-            
-            
-            setUpPhysicsWorld()
-            startFruitCycle()
-            createWall()
-        }
+    var textureUp: SKTexture!
+    var textureDown: SKTexture!
+    var textureLeft: SKTexture!
+    var textureRight: SKTexture!
+    var textureUpLeft: SKTexture!
+    var textureDownLeft: SKTexture!
+    var textureUpRight: SKTexture!
+    var textureDownRight: SKTexture!
     
-        func createWall() {
-            let wallSize = CGSize(width: 200, height: 250)
-            let wall = SKSpriteNode(color: .blue, size: wallSize)
-            wall.position = CGPoint(x: size.width / 1, y: size.height / 1)
-
-            wall.physicsBody = SKPhysicsBody(rectangleOf: wallSize)
-            wall.physicsBody?.isDynamic = false
-            wall.physicsBody?.categoryBitMask = PhysicsCategory.wall
-            wall.physicsBody?.contactTestBitMask = PhysicsCategory.player
-            wall.physicsBody?.collisionBitMask = PhysicsCategory.player
-
-            addChild(wall)
-        }
+    var gameCamera = SKCameraNode()
+    
+    
+    
+    override func didMove(to view: SKView) {
+        
+        textureUp = SKTexture(imageNamed: "OpossumUpFrame")
+        textureDown = SKTexture(imageNamed: "OpossumDownFrame")
+        textureLeft = SKTexture(imageNamed: "OpossumLeftFrame")
+        textureRight = SKTexture(imageNamed: "OpossumRightFrame")
+        textureUpLeft = SKTexture(imageNamed: "OpossumUpLeftFrame")
+        textureUpRight = SKTexture(imageNamed: "OpossumUpRightFrame")
+        textureDownLeft = SKTexture(imageNamed: "OpossumDownLeftFrame")
+        textureDownRight = SKTexture(imageNamed: "OpossumDownRightFrame")
+        
+        let playerTexture = SKTexture(imageNamed: "OpossumDownFrame")
+        let mapTexture = SKTexture(imageNamed: "Map")
+        self.camera = gameCamera
+        addChild(gameCamera)
+        
+        // Create the player node
+        player = SKSpriteNode(texture: playerTexture)
+        print("player gets created")
+        
+        player.size = CGSize(width: 75, height: 75)
+        player.position = CGPoint(x: size.width / 1.5, y: size.height / 2)
+        player.physicsBody = SKPhysicsBody(texture: playerTexture, size: player.size) // collidable area mapped to alpha channel of sprite
+        player.physicsBody?.categoryBitMask = PhysicsCategory.player
+        player.physicsBody?.contactTestBitMask = PhysicsCategory.fruits
+        player.physicsBody?.collisionBitMask = PhysicsCategory.wall | PhysicsCategory.fruits
+        player.physicsBody?.allowsRotation = false
+        player.physicsBody?.affectedByGravity = false
+        player.physicsBody?.allowsRotation = false
+        
+        
+        
+        
+        // Create the map node
+        mapNode = SKSpriteNode(texture: mapTexture)
+        mapNode.size = CGSize(width: 1800, height: 1800)
+        mapNode.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        addChild(mapNode)
+        addChild(player)
+        
+        //Create the movement constraints for the player (player can't exit the map)
+        let xRange = SKRange(lowerLimit: -mapNode.size.width / 2, upperLimit: mapNode.size.width / 2)
+        let yRange = SKRange(lowerLimit: -mapNode.size.height / 2, upperLimit: mapNode.size.width / 2)
+        let xConstraint = SKConstraint.positionX(xRange)
+        let yConstraint = SKConstraint.positionY(yRange)
+        movementWhithinMap = [xConstraint, yConstraint]
+        
+        player.constraints = [xConstraint, yConstraint]
+        
+        
+        // Create the joystick base
+        joystickBase = SKShapeNode(circleOfRadius: 50)
+        joystickBase.position = CGPoint(x: -300, y: -100)
+        joystickBase.zPosition = 5
+        gameCamera.addChild(joystickBase)
+        
+        // Create the joystick knob
+        joystickKnob = SKShapeNode(circleOfRadius: 25)
+        joystickKnob?.fillColor = .white
+        joystickKnob?.position = joystickBase.position
+        joystickKnob?.zPosition = 5
+        gameCamera.addChild(joystickKnob!)
+        
+        // Create the button for faking death
+        fakedeathButton = SKShapeNode(circleOfRadius: 50)
+        fakedeathButton?.fillColor = .red
+        fakedeathButton?.position = CGPoint(x: 300, y: -100)
+        fakedeathButton?.zPosition = 5
+        gameCamera.addChild(fakedeathButton!)
+        //Create the enemy
+        createEnemies()
+        
+        
+        setUpPhysicsWorld()
+        startFruitCycle()
+        createWall()
+    }
+    
+    func createWall() {
+        let wallSize = CGSize(width: 200, height: 250)
+        let wall = SKSpriteNode(color: .blue, size: wallSize)
+        wall.position = CGPoint(x: size.width / 1, y: size.height / 1)
+        
+        wall.physicsBody = SKPhysicsBody(rectangleOf: wallSize)
+        wall.physicsBody?.isDynamic = false
+        wall.physicsBody?.categoryBitMask = PhysicsCategory.wall
+        wall.physicsBody?.contactTestBitMask = PhysicsCategory.player
+        wall.physicsBody?.collisionBitMask = PhysicsCategory.player
+        
+        addChild(wall)
+    }
     
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-       
-            for touch in touches {
-                let location = touch.location(in: self)
-                
-                //When you touch the joystick
-                if let touchedNode = atPoint(location) as? SKShapeNode, touchedNode == joystickBase || touchedNode == joystickKnob && buttonActive == false{
-                    joystickActive = true
-                }
-                
-                //When you touch the fake death button
-                if let touchedNode = atPoint(location) as? SKShapeNode, touchedNode == fakedeathButton {
-                    
-                    //When you activate the button
-                    if buttonActive==false {
-                        
-                        if gameLogic.currentScore > 0 {
-                            print("QUICK! FAKE DEATH!")
-                            buttonActive = true
-                            fakedeathButton?.fillColor = .green
-                            joystickKnob?.position = CGPoint(x: -300, y: -100)
-                            joystickKnob?.alpha = 0.4
-                            let eatApple = SKAction.run {
-                                self.gameLogic.currentScore -= 1
-                            }
-                            let wait = SKAction.wait(forDuration: 1)
-                            let fullAction = SKAction.sequence([eatApple, wait])
-                            
-                            fakedeathButton!.run(SKAction.repeatForever(fullAction), withKey: ActionKeys.eating.rawValue)
-                        }else{
-                                print("Grab more apples!")
-                            }
-                        
-                    }else{ //When you turn off the button
-                       turnOffButton()
-                    }
-                    
-                    
-                    }
-                
-                }
-            }
         
- 
-
-    
-        override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-            guard let joystickKnob = joystickKnob, joystickActive else { return }
-
-            for touch in touches {
-                let location = touch.location(in: self.gameCamera)
-                let angle = atan2(location.y - joystickBase.position.y, location.x - joystickBase.position.x)
-                let length = joystickBase.frame.size.width / 2
-
-                let x = length * cos(angle)
-                let y = length * sin(angle)
-
-                let distance = sqrt(pow(location.x - joystickBase.position.x, 2) + pow(location.y - joystickBase.position.y, 2))
-
-                if distance <= length {
-                    joystickKnob.position = CGPoint(x: joystickBase.position.x + x, y: joystickBase.position.y + y)
-                } else {
-                    joystickKnob.position = CGPoint(x: joystickBase.position.x + cos(angle) * length, y: joystickBase.position.y + sin(angle) * length)
-                }
-
-                // Move the player
-                movePlayer(vector: CGVector(dx: cos(angle), dy: sin(angle)))
+        for touch in touches {
+            let location = touch.location(in: self)
+            
+            //When you touch the joystick
+            if let touchedNode = atPoint(location) as? SKShapeNode, touchedNode == joystickBase || touchedNode == joystickKnob && buttonActive == false{
+                joystickActive = true
             }
+            
+            //When you touch the fake death button
+            if let touchedNode = atPoint(location) as? SKShapeNode, touchedNode == fakedeathButton {
+                
+                //When you activate the button
+                if buttonActive==false {
+                    
+                    if gameLogic.currentScore > 0 {
+                        print("QUICK! FAKE DEATH!")
+                        buttonActive = true
+                        fakedeathButton?.fillColor = .green
+                        joystickKnob?.position = CGPoint(x: -300, y: -100)
+                        joystickKnob?.alpha = 0.4
+                        let eatApple = SKAction.run {
+                            self.gameLogic.currentScore -= 1
+                        }
+                        let wait = SKAction.wait(forDuration: 1)
+                        let fullAction = SKAction.sequence([wait, eatApple])
+                        
+                        fakedeathButton!.run(SKAction.repeatForever(fullAction), withKey: ActionKeys.eating.rawValue)
+                    }else{
+                        print("Grab more apples!")
+                    }
+                    
+                }else{ //When you turn off the button
+                    turnOffButton()
+                }
+                
+                
+            }
+            
         }
-
-        override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-            joystickKnob?.position = joystickBase.position
-            joystickActive = false
-            player.physicsBody?.velocity = .zero
+    }
+    
+    
+    
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let joystickKnob = joystickKnob, joystickActive else { return }
+        
+        for touch in touches {
+            let location = touch.location(in: self.gameCamera)
+            let angle = atan2(location.y - joystickBase.position.y, location.x - joystickBase.position.x)
+            let length = joystickBase.frame.size.width / 2
+            
+            let x = length * cos(angle)
+            let y = length * sin(angle)
+            
+            let distance = sqrt(pow(location.x - joystickBase.position.x, 2) + pow(location.y - joystickBase.position.y, 2))
+            
+            if distance <= length {
+                joystickKnob.position = CGPoint(x: joystickBase.position.x + x, y: joystickBase.position.y + y)
+            } else {
+                joystickKnob.position = CGPoint(x: joystickBase.position.x + cos(angle) * length, y: joystickBase.position.y + sin(angle) * length)
+            }
+            
+            // Move the player
+            movePlayer(vector: CGVector(dx: cos(angle), dy: sin(angle)))
+            // Update player texture based on movement direction
+            updatePlayerTexture(angle: angle)
         }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        joystickKnob?.position = joystickBase.position
+        joystickActive = false
+        player.physicsBody?.velocity = .zero
+    }
+    
+    func updatePlayerTexture(angle: CGFloat) {
+        
+        if (angle > (-1.0 * (CGFloat.pi/8))) && (angle < (CGFloat.pi/8)) {
+            //Moving up
+            player.texture = textureRight
+            print("Moving right")
+        } else if (angle > (CGFloat.pi/8)) && (angle < (3.0 * (CGFloat.pi/8))){
+            player.texture = textureUpRight
+            print("Up right")
+        } else if (angle > (3.0 * (CGFloat.pi/8))) && (angle < (5.0 * (CGFloat.pi/8))){
+            player.texture = textureUp
+            print("Up")
+        } else if (angle > (5.0 * (CGFloat.pi/8))) && (angle < (7.0 * (CGFloat.pi/8))){
+            player.texture = textureUpLeft
+            print("Up left")
+        } else if (angle > (7.0 * (CGFloat.pi/8))) && (angle < (9.0 * (CGFloat.pi/8))){
+            player.texture = textureLeft
+            print("Left")
+        } else if (angle < (-1.0 * (CGFloat.pi/8))) && (angle > (-3.0 * (CGFloat.pi/8))){
+            player.texture = textureDownRight
+            print("Down Right")
+        } else if (angle < (-3.0 * (CGFloat.pi/8))) && (angle > (-5.0 * (CGFloat.pi/8))){
+            player.texture = textureDown
+            print("Down")
+        } else {
+            player.texture = textureDownLeft
+            print("Down Left")
+        }
+    }
     
     //Fruit spawning
     
@@ -237,7 +285,7 @@ class ArcadeGameScene: SKScene {
         return position
     }
     
-        // Other game logic and methods can go here
+    // Other game logic and methods can go here
     
     func movePlayer(vector: CGVector) {
         let speed: CGFloat = 300
@@ -245,7 +293,7 @@ class ArcadeGameScene: SKScene {
         player.physicsBody?.velocity = CGVector(dx: vector.dx * speed, dy: vector.dy * speed)
     }
     
- 
+    
     
     override func update(_ currentTime: TimeInterval) {
         
@@ -291,7 +339,7 @@ class ArcadeGameScene: SKScene {
     
     //MARK: Enemies
     func createEnemies() {
-//        let movementAction = createMovementAction()
+        //        let movementAction = createMovementAction()
         let owlFlyingDown = [SKTexture(imageNamed: "owlFlyingDown0"), SKTexture(imageNamed: "owlFlyingDown1"), SKTexture(imageNamed: "owlFlyingDown2"), SKTexture(imageNamed: "owlFlyingDown1")]
         let owlStandingDown = SKTexture(imageNamed: "owlStandingDown")
         
@@ -310,7 +358,7 @@ class ArcadeGameScene: SKScene {
             enemy.physicsBody?.collisionBitMask = PhysicsCategory.none
             addChild(enemy)
             
-//            enemy.run(movementAction)
+            //            enemy.run(movementAction)
             
             let visionCone = createFieldOfView()
             enemy.addChild(visionCone)
@@ -352,17 +400,17 @@ class ArcadeGameScene: SKScene {
         
         return Float.random(in: angleRange)
     }
-
+    
     func movementDirection(angle: Float) -> CGVector {
         let velocity: Float = 150
-         
+        
         let x: CGFloat = CGFloat(-sin(angle) * velocity)
         let y: CGFloat = CGFloat(cos(angle) * velocity)
         //Why are sin and cos effed up, you may wonder. When the character moves, I need to change the orientation of the field of view and the sprite of the character accordingly. The angle 0 for the orientation of the field of view is currently the y+ axis. I used cos and sin like this to be coherent with that angle. I may change it later like so: sin and cos go back to their rightful places, i'll modify the shape of the field of view so that it extends to the right rather than to the top
         
         return CGVector(dx: x, dy: y)
     }
-
+    
     func createFieldOfView() -> SKShapeNode {
         let path = CGMutablePath()
         path.move(to: CGPoint(x: 0, y: 0))
@@ -415,7 +463,7 @@ extension ArcadeGameScene: SKPhysicsContactDelegate {
         }
         
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
-
+        
         if collision == PhysicsCategory.wall | PhysicsCategory.player {
             print("Player collided with the wall")
         }
