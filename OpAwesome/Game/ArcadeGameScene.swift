@@ -122,16 +122,26 @@ class ArcadeGameScene: SKScene {
                     
                     //When you activate the button
                     if buttonActive==false {
-                        print("QUICK! FAKE DEATH!")
-                        buttonActive = true
-                        fakedeathButton?.fillColor = .green
-                        joystickKnob?.position = CGPoint(x: -300, y: -100)
-                        joystickKnob?.alpha = 0.4
+                        
+                        if gameLogic.currentScore > 0 {
+                            print("QUICK! FAKE DEATH!")
+                            buttonActive = true
+                            fakedeathButton?.fillColor = .green
+                            joystickKnob?.position = CGPoint(x: -300, y: -100)
+                            joystickKnob?.alpha = 0.4
+                            let eatApple = SKAction.run {
+                                self.gameLogic.currentScore -= 1
+                            }
+                            let wait = SKAction.wait(forDuration: 1)
+                            let fullAction = SKAction.sequence([eatApple, wait])
+                            
+                            fakedeathButton!.run(SKAction.repeatForever(fullAction), withKey: ActionKeys.eating.rawValue)
+                        }else{
+                                print("Grab more apples!")
+                            }
+                        
                     }else{ //When you turn off the button
-                        print("RUN POSSUM, RUN!")
-                        buttonActive = false
-                        fakedeathButton?.fillColor = .red
-                        joystickKnob?.alpha = 1
+                       turnOffButton()
                     }
                     
                     
@@ -247,10 +257,15 @@ class ArcadeGameScene: SKScene {
             
             let viewCone = enemy.children.first(where: {node in node.name == "fieldOfView"})
             if viewCone?.contains(playerRelativePosition) ?? false {
-                gameOver()
+                IsGameOver()
             }
             
         }
+        
+        if buttonActive==true && gameLogic.currentScore == 0 {
+            turnOffButton()
+        }
+        
     }
     
     private func setUpPhysicsWorld() {
@@ -379,7 +394,8 @@ extension ArcadeGameScene: SKPhysicsContactDelegate {
         
         if (firstBody.categoryBitMask == PhysicsCategory.player && secondBody.categoryBitMask == PhysicsCategory.predators) ||
             (firstBody.categoryBitMask == PhysicsCategory.predators && secondBody.categoryBitMask == PhysicsCategory.player) {
-            gameLogic.isGameOver = true
+            IsGameOver()
+            
             print("game over")
         }
     }
@@ -389,8 +405,25 @@ extension ArcadeGameScene: SKPhysicsContactDelegate {
         print("mannacc mannacc")
         gameLogic.isGameOver = true
     }
+    
+    func IsGameOver(){
+        if buttonActive==false {
+            print("NOO")
+            gameOver()
+        }else{
+            print("nicee")
+        }
+    }
+    
+    func turnOffButton() {
+        print("RUN POSSUM, RUN!")
+        buttonActive = false
+        fakedeathButton?.fillColor = .red
+        joystickKnob?.alpha = 1
+        fakedeathButton?.removeAction(forKey: ActionKeys.eating.rawValue)
+    }
 }
 
 enum ActionKeys: String {
-    case animation, movement
+    case animation, movement, eating
 }
