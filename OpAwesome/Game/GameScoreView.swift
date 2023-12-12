@@ -20,7 +20,7 @@ struct GameScoreView: View {
     var body: some View {
         
         HStack {
-            Image("points")
+            Image("apple")
                 .font(.headline)
             Spacer()
             Text("\(score)")
