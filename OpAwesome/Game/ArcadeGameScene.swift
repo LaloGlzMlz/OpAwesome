@@ -24,6 +24,7 @@ class ArcadeGameScene: SKScene {
     var gameLogic: ArcadeGameLogic = ArcadeGameLogic.shared
     var lastUpdate: TimeInterval = 0
     var player: SKSpriteNode!
+    var playerCharacter: Character!
     var movementWhithinMap: [SKConstraint]!
     var joystickBase: SKShapeNode!
     var joystickKnob: SKShapeNode?
@@ -46,7 +47,9 @@ class ArcadeGameScene: SKScene {
     
     
     
+    
     override func didMove(to view: SKView) {
+        
         
         textureUp = SKTexture(imageNamed: "OpossumUpFrame")
         textureDown = SKTexture(imageNamed: "OpossumDownFrame")
@@ -75,6 +78,8 @@ class ArcadeGameScene: SKScene {
         player.physicsBody?.allowsRotation = false
         player.physicsBody?.affectedByGravity = false
         player.physicsBody?.allowsRotation = false
+        
+        playerCharacter = Character(name: "Opossum")
         
         
         
@@ -168,6 +173,8 @@ class ArcadeGameScene: SKScene {
                         let fullAction = SKAction.sequence([wait, eatApple])
                         
                         fakedeathButton!.run(SKAction.repeatForever(fullAction), withKey: ActionKeys.eating.rawValue)
+                        player.removeAction(forKey: ActionKeys.animation.rawValue)
+                        player.texture = playerCharacter.animations[.FakeDeath]!.first
                     }else{
                         print("Grab more apples!")
                     }
@@ -207,7 +214,16 @@ class ArcadeGameScene: SKScene {
             // Move the player
             movePlayer(vector: CGVector(dx: cos(angle), dy: sin(angle)))
             // Update player texture based on movement direction
-            updatePlayerTexture(angle: angle)
+            let playerOrientation = playerCharacter.updatePlayerOrientation(angle: angle)
+            if playerOrientation != playerCharacter.orientation || !playerCharacter.isMoving {
+                player.removeAction(forKey: ActionKeys.animation.rawValue)
+                let textures = playerCharacter.animations[playerOrientation]
+                let animation = SKAction.animate(with: textures!, timePerFrame: 0.1)
+                let cyclingAnimation = SKAction.repeatForever(animation)
+                player.run(cyclingAnimation, withKey: ActionKeys.animation.rawValue)
+                playerCharacter.orientation = playerOrientation
+                playerCharacter.isMoving.toggle()
+            }
         }
     }
     
@@ -215,36 +231,8 @@ class ArcadeGameScene: SKScene {
         joystickKnob?.position = joystickBase.position
         joystickActive = false
         player.physicsBody?.velocity = .zero
-    }
-    
-    func updatePlayerTexture(angle: CGFloat) {
-        
-        if (angle > (-1.0 * (CGFloat.pi/8))) && (angle < (CGFloat.pi/8)) {
-            //Moving up
-            player.texture = textureRight
-            print("Moving right")
-        } else if (angle > (CGFloat.pi/8)) && (angle < (3.0 * (CGFloat.pi/8))){
-            player.texture = textureUpRight
-            print("Up right")
-        } else if (angle > (3.0 * (CGFloat.pi/8))) && (angle < (5.0 * (CGFloat.pi/8))){
-            player.texture = textureUp
-            print("Up")
-        } else if (angle > (5.0 * (CGFloat.pi/8))) && (angle < (7.0 * (CGFloat.pi/8))){
-            player.texture = textureUpLeft
-            print("Up left")
-        } else if (angle > (7.0 * (CGFloat.pi/8))) && (angle < (9.0 * (CGFloat.pi/8))){
-            player.texture = textureLeft
-            print("Left")
-        } else if (angle < (-1.0 * (CGFloat.pi/8))) && (angle > (-3.0 * (CGFloat.pi/8))){
-            player.texture = textureDownRight
-            print("Down Right")
-        } else if (angle < (-3.0 * (CGFloat.pi/8))) && (angle > (-5.0 * (CGFloat.pi/8))){
-            player.texture = textureDown
-            print("Down")
-        } else {
-            player.texture = textureDownLeft
-            print("Down Left")
-        }
+        player.removeAction(forKey: ActionKeys.animation.rawValue)
+        playerCharacter.isMoving.toggle()
     }
     
     //Fruit spawning
@@ -337,13 +325,13 @@ class ArcadeGameScene: SKScene {
     }
     
     
-    //MARK: Enemies
+    //MARK: moved Enemies
     func createEnemies() {
         //        let movementAction = createMovementAction()
         let owlFlyingDown = [SKTexture(imageNamed: "owlFlyingDown0"), SKTexture(imageNamed: "owlFlyingDown1"), SKTexture(imageNamed: "owlFlyingDown2"), SKTexture(imageNamed: "owlFlyingDown1")]
         let owlStandingDown = SKTexture(imageNamed: "owlStandingDown")
         
-        for _ in 0..<5 {
+        for _ in 0..<10 {
             let enemy = SKSpriteNode()
             enemy.size = player.size
             enemy.position = randomFruitPosition()
@@ -387,13 +375,14 @@ class ArcadeGameScene: SKScene {
         }
     }
     
-    
+    //MARK: moved
     func decideMove() -> Bool {
         let range = 0...10
         let choice = Int.random(in: range)
         return choice < 7
     }
     
+    //MARK: moved
     //generate random angle in radians
     func randomAngle() -> Float {
         let angleRange: Range<Float> = 0..<2 * Float.pi
@@ -401,6 +390,7 @@ class ArcadeGameScene: SKScene {
         return Float.random(in: angleRange)
     }
     
+    //MARK: moved
     func movementDirection(angle: Float) -> CGVector {
         let velocity: Float = 150
         
@@ -411,6 +401,7 @@ class ArcadeGameScene: SKScene {
         return CGVector(dx: x, dy: y)
     }
     
+    //MARK: Moved to enemy
     func createFieldOfView() -> SKShapeNode {
         let path = CGMutablePath()
         path.move(to: CGPoint(x: 0, y: 0))
@@ -490,6 +481,7 @@ extension ArcadeGameScene: SKPhysicsContactDelegate {
         fakedeathButton?.fillColor = .red
         joystickKnob?.alpha = 1
         fakedeathButton?.removeAction(forKey: ActionKeys.eating.rawValue)
+        player.texture = playerCharacter.animations[self.playerCharacter.orientation]!.first!
     }
 }
 
