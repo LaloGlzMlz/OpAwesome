@@ -33,6 +33,7 @@ class ArcadeGameScene: SKScene {
     var fakedeathButton: SKShapeNode?
     var buttonActive: Bool = false
     var enemies: [SKSpriteNode] = []
+    var wall: SKSpriteNode!
     
     var textureUp: SKTexture!
     var textureDown: SKTexture!
@@ -60,8 +61,9 @@ class ArcadeGameScene: SKScene {
         textureDownLeft = SKTexture(imageNamed: "OpossumDownLeftFrame")
         textureDownRight = SKTexture(imageNamed: "OpossumDownRightFrame")
         
+        
         let playerTexture = SKTexture(imageNamed: "OpossumDownFrame")
-        let mapTexture = SKTexture(imageNamed: "Map")
+        let mapTexture = SKTexture(imageNamed: "Ground")
         self.camera = gameCamera
         addChild(gameCamera)
         
@@ -86,14 +88,14 @@ class ArcadeGameScene: SKScene {
         
         // Create the map node
         mapNode = SKSpriteNode(texture: mapTexture)
-        mapNode.size = CGSize(width: 1800, height: 1800)
+        mapNode.size = CGSize(width: 1576 * 2, height: 969 * 2)
         mapNode.position = CGPoint(x: size.width / 2, y: size.height / 2)
         addChild(mapNode)
         addChild(player)
         
         //Create the movement constraints for the player (player can't exit the map)
-        let xRange = SKRange(lowerLimit: -mapNode.size.width / 2, upperLimit: mapNode.size.width / 2)
-        let yRange = SKRange(lowerLimit: -mapNode.size.height / 2, upperLimit: mapNode.size.width / 2)
+        let xRange = SKRange(lowerLimit: 0, upperLimit: 1576)
+        let yRange = SKRange(lowerLimit: 0, upperLimit: 969)
         let xConstraint = SKConstraint.positionX(xRange)
         let yConstraint = SKConstraint.positionY(yRange)
         movementWhithinMap = [xConstraint, yConstraint]
@@ -122,23 +124,37 @@ class ArcadeGameScene: SKScene {
         gameCamera.addChild(fakedeathButton!)
         //Create the enemy
         createEnemies()
-        
+        startFruitCycle()
         
         setUpPhysicsWorld()
-        startFruitCycle()
-        createWall()
+        
+        let wallTexture = SKTexture(imageNamed: "wall1")
+        let wall2 = SKTexture(imageNamed: "wall2")
+        let wall3 = SKTexture(imageNamed: "wall3")
+        let wall4 = SKTexture(imageNamed: "wall4")
+        let wall5 = SKTexture(imageNamed: "wall5")
+        let wall6 = SKTexture(imageNamed: "wall6")
+        createWall(texture: wallTexture, position: CGPoint(x: 700, y: 763))
+        createWall(texture: wall2, position: CGPoint(x: 200, y: 620))
+        createWall(texture: wall3, position: CGPoint(x: 1370, y: 915))
+        createWall(texture: wall4, position: CGPoint(x: 500, y: 170))
+        createWall(texture: wall5, position: CGPoint(x: 1200, y: 380))
+        createWall(texture: wall6, position: CGPoint(x: 1522, y: 40))
+        
+        
     }
     
-    func createWall() {
-        let wallSize = CGSize(width: 200, height: 250)
-        let wall = SKSpriteNode(color: .blue, size: wallSize)
-        wall.position = CGPoint(x: size.width / 1, y: size.height / 1)
-        
-        wall.physicsBody = SKPhysicsBody(rectangleOf: wallSize)
+    func createWall(texture: SKTexture, position: CGPoint) {
+        //let wallTexture = SKTexture(imageNamed: "paredbuena")
+        let wallSize = texture.size()
+        wall = SKSpriteNode(texture: texture)
+        wall.position = position
+        wall.physicsBody = SKPhysicsBody(texture: texture, size: wallSize)
         wall.physicsBody?.isDynamic = false
         wall.physicsBody?.categoryBitMask = PhysicsCategory.wall
         wall.physicsBody?.contactTestBitMask = PhysicsCategory.player
         wall.physicsBody?.collisionBitMask = PhysicsCategory.player
+        print(position)
         
         addChild(wall)
     }
@@ -265,10 +281,14 @@ class ArcadeGameScene: SKScene {
     }
     
     private func randomFruitPosition() -> CGPoint{
-        let xSpawnRange = -mapNode.size.width / 2 + 30 ... mapNode.size.width / 2 - 30
-        let ySpawnRange = -mapNode.size.height / 2 + 30 ... mapNode.size.height / 2 - 30
+        //let xSpawnRange = -mapNode.size.width / 2 + 30 ... mapNode.size.width / 2 - 30
+        //let ySpawnRange = -mapNode.size.height / 2 + 30 ... mapNode.size.height / 2 - 30
         
-        let position = CGPoint(x: CGFloat.random(in: xSpawnRange), y: CGFloat.random(in: ySpawnRange))
+        let randomX = CGFloat.random(in: 0...1576)
+        let randomY = CGFloat.random(in: 0...969)
+        
+        //let position = CGPoint(x: CGFloat.random(in: xSpawnRange), y: CGFloat.random(in: ySpawnRange))
+        let position = CGPoint(x: randomX, y: randomY)
         
         return position
     }
@@ -276,7 +296,7 @@ class ArcadeGameScene: SKScene {
     // Other game logic and methods can go here
     
     func movePlayer(vector: CGVector) {
-        let speed: CGFloat = 300
+        let speed: CGFloat = 400
         
         player.physicsBody?.velocity = CGVector(dx: vector.dx * speed, dy: vector.dy * speed)
     }
