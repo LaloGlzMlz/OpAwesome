@@ -255,7 +255,7 @@ class ArcadeGameScene: SKScene {
     
     private func startFruitCycle() {
         let createFruitAction = SKAction.run(generateFruit)
-        let waitAction = SKAction.wait(forDuration: 5.0)
+        let waitAction = SKAction.wait(forDuration: 2.0)
         
         let createAndWaitAction = SKAction.sequence([createFruitAction, waitAction])
         let fruitCycleAction = SKAction.repeatForever(createAndWaitAction)
@@ -296,7 +296,7 @@ class ArcadeGameScene: SKScene {
     // Other game logic and methods can go here
     
     func movePlayer(vector: CGVector) {
-        let speed: CGFloat = 400
+        let speed: CGFloat = 200
         
         player.physicsBody?.velocity = CGVector(dx: vector.dx * speed, dy: vector.dy * speed)
     }
@@ -351,7 +351,7 @@ class ArcadeGameScene: SKScene {
         let owlFlyingDown = [SKTexture(imageNamed: "owlFlyingDown0"), SKTexture(imageNamed: "owlFlyingDown1"), SKTexture(imageNamed: "owlFlyingDown2"), SKTexture(imageNamed: "owlFlyingDown1")]
         let owlStandingDown = SKTexture(imageNamed: "owlStandingDown")
         
-        for _ in 0..<10 {
+        for _ in 0..<8 {
             let enemy = SKSpriteNode()
             enemy.size = player.size
             enemy.position = randomFruitPosition()
