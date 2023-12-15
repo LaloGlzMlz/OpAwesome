@@ -30,36 +30,16 @@ class ArcadeGameScene: SKScene {
     var joystickKnob: SKShapeNode?
     var joystickActive: Bool = false
     var mapNode: SKSpriteNode!
-    var fakedeathButton: SKShapeNode?
+    var fakedeathButton: SKSpriteNode?
     var buttonActive: Bool = false
     var enemies: [SKSpriteNode] = []
     var wall: SKSpriteNode!
     
-    var textureUp: SKTexture!
-    var textureDown: SKTexture!
-    var textureLeft: SKTexture!
-    var textureRight: SKTexture!
-    var textureUpLeft: SKTexture!
-    var textureDownLeft: SKTexture!
-    var textureUpRight: SKTexture!
-    var textureDownRight: SKTexture!
-    
     var gameCamera = SKCameraNode()
     
     
-    
-    
     override func didMove(to view: SKView) {
-        
-        
-        textureUp = SKTexture(imageNamed: "OpossumUpFrame")
-        textureDown = SKTexture(imageNamed: "OpossumDownFrame")
-        textureLeft = SKTexture(imageNamed: "OpossumLeftFrame")
-        textureRight = SKTexture(imageNamed: "OpossumRightFrame")
-        textureUpLeft = SKTexture(imageNamed: "OpossumUpLeftFrame")
-        textureUpRight = SKTexture(imageNamed: "OpossumUpRightFrame")
-        textureDownLeft = SKTexture(imageNamed: "OpossumDownLeftFrame")
-        textureDownRight = SKTexture(imageNamed: "OpossumDownRightFrame")
+
         
         
         let playerTexture = SKTexture(imageNamed: "OpossumDownFrame")
@@ -117,10 +97,10 @@ class ArcadeGameScene: SKScene {
         gameCamera.addChild(joystickKnob!)
         
         // Create the button for faking death
-        fakedeathButton = SKShapeNode(circleOfRadius: 50)
-        fakedeathButton?.fillColor = .red
+        fakedeathButton = SKSpriteNode(imageNamed: "deadButton")
         fakedeathButton?.position = CGPoint(x: 300, y: -100)
         fakedeathButton?.zPosition = 5
+        fakedeathButton?.alpha = 1
         gameCamera.addChild(fakedeathButton!)
         //Create the enemy
         createEnemies()
@@ -178,8 +158,9 @@ class ArcadeGameScene: SKScene {
                     
                     if gameLogic.currentScore > 0 {
                         print("QUICK! FAKE DEATH!")
+                        fakedeathButton?.texture = SKTexture(imageNamed: "aliveButton")
                         buttonActive = true
-                        fakedeathButton?.fillColor = .green
+//                        fakedeathButton?.fillColor = .green
                         joystickKnob?.position = CGPoint(x: -300, y: -100)
                         joystickKnob?.alpha = 0.4
                         let eatApple = SKAction.run {
@@ -255,7 +236,7 @@ class ArcadeGameScene: SKScene {
     
     private func startFruitCycle() {
         let createFruitAction = SKAction.run(generateFruit)
-        let waitAction = SKAction.wait(forDuration: 5.0)
+        let waitAction = SKAction.wait(forDuration: 2.0)
         
         let createAndWaitAction = SKAction.sequence([createFruitAction, waitAction])
         let fruitCycleAction = SKAction.repeatForever(createAndWaitAction)
@@ -296,7 +277,7 @@ class ArcadeGameScene: SKScene {
     // Other game logic and methods can go here
     
     func movePlayer(vector: CGVector) {
-        let speed: CGFloat = 400
+        let speed: CGFloat = 200
         
         player.physicsBody?.velocity = CGVector(dx: vector.dx * speed, dy: vector.dy * speed)
     }
@@ -351,7 +332,7 @@ class ArcadeGameScene: SKScene {
         let owlFlyingDown = [SKTexture(imageNamed: "owlFlyingDown0"), SKTexture(imageNamed: "owlFlyingDown1"), SKTexture(imageNamed: "owlFlyingDown2"), SKTexture(imageNamed: "owlFlyingDown1")]
         let owlStandingDown = SKTexture(imageNamed: "owlStandingDown")
         
-        for _ in 0..<10 {
+        for _ in 0..<8 {
             let enemy = SKSpriteNode()
             enemy.size = player.size
             enemy.position = randomFruitPosition()
@@ -498,7 +479,10 @@ extension ArcadeGameScene: SKPhysicsContactDelegate {
     func turnOffButton() {
         print("RUN POSSUM, RUN!")
         buttonActive = false
-        fakedeathButton?.fillColor = .red
+//        fakedeathButton?.fillColor = .white
+//        fakedeathButton = SKShapeNode(fileNamed: "deadButton")
+        fakedeathButton?.texture = SKTexture(imageNamed: "deadButton")
+        fakedeathButton?.alpha = 0.4
         joystickKnob?.alpha = 1
         fakedeathButton?.removeAction(forKey: ActionKeys.eating.rawValue)
         player.texture = playerCharacter.animations[self.playerCharacter.orientation]!.first!
