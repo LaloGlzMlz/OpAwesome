@@ -33,34 +33,85 @@ struct MainScreenView: View {
     var body: some View {
         
         ZStack {
-            Image("StartView")
+            Image("title")
                 .resizable()
+                .scaledToFill()
                 .ignoresSafeArea()
+            Image("OpossumLeftFrame")
+                .resizable()
+                .frame(width: 80, height: 80)
+                .padding(.bottom, -12)
+                .padding(.leading, 60)
+            Image("owlFlyingDown1")
+                .resizable()
+                .frame(width: 120, height: 120)
+                .padding(.trailing, 600)
+                .padding(.bottom, 150)
+            Image("apple")
+                .resizable()
+                .frame(width: 25, height: 25)
+                .padding(.bottom, -25)
+                .padding(.trailing, 100)
             VStack(alignment: .center, spacing: 16.0) {
-                Button {
-                    withAnimation { self.startGame() }
-                } label: {
-                    Text("START")
-                        .padding()
-                        .frame(maxWidth: 195)
-                        .font(Font.custom("Daydream", size: 25))
+                ZStack{
+                    Image("ButtonNormalBrown")
+                        .resizable()
+                        .frame(width: 430, height: 130)
+                    Text("OpAwesome!")
+                        .font(Font.custom("Daydream", size: 30))
+                        .foregroundColor(Color(.ground))
                 }
-                .foregroundColor(.black)
-                .background(.red)
-                .cornerRadius(10.0)
-                .padding()
+                //Spacer()
                 
-                Button(action: {
-                    showingInstructions.toggle()//true
-                }) {
-                    Label("?", systemImage: "")
-                        .font(Font.custom("Daydream", size: 25))
-                        .padding(.bottom, 5)
-                        .foregroundColor(.black)
+                    Button {
+                        withAnimation { self.startGame() }
+                    } label: {
+                        Text("START")
+                            .padding()
+                            //.frame(maxWidth: 195)
+                            .font(Font.custom("Daydream", size: 25))
+                    }
+                    .background(
+                        Image("wood")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxWidth: 220)
+                    )
+                    .foregroundColor(.black)
+                    .padding(.top, 50)
+                HStack{
+                    Button(action: {
+                        showingInstructions.toggle()//true
+                    }) {
+                        Label("Leaderboard", systemImage: "")
+                            .font(Font.custom("Daydream", size: 12))
+                            .padding()
+                            .foregroundColor(Color(.ground))
+                    }
+                    .background(
+                        Image("wood2")
+                            .resizable()
+                            .frame(width: 160, height: 50)
+                    )
+                    
+                    Button(action: {
+                        showingInstructions.toggle()//true
+                    }) {
+                        Label("?", systemImage: "")
+                            .font(Font.custom("Daydream", size: 19))
+                            .padding()
+                            .foregroundColor(Color(.ground))
+                    }
+                    .background(
+                        Image("wood2")
+                            .resizable()
+                            .frame(width: 60, height: 50)
+                    )
+                    .sheet(isPresented: $showingInstructions) {
+                        InstructionView(isPresented: $showingInstructions)
+                    }
                 }
-                .sheet(isPresented: $showingInstructions) {
-                    InstructionView(isPresented: $showingInstructions)
-                }
+                
                 
                
                 

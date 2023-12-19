@@ -46,7 +46,9 @@ struct InstructionView: View {
                 Button(action: {
                     isPresented.toggle()
                 }) {
-                    Label("", systemImage: "xmark.circle.fill")
+                    Image("close_button")
+                        .resizable()
+                        .frame(width: 35, height: 35)
                         .foregroundColor(Color(.ground))
                         .padding(.leading, 750)
                         .padding(.bottom, 310)
