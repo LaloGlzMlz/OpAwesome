@@ -16,6 +16,8 @@ import SwiftUI
 
 struct MainScreenView: View {
     
+    @State var showingInstructions = false
+    
     // The game state is used to transition between the different states of the game
     @Binding var currentGameState: GameState
     
@@ -29,51 +31,43 @@ struct MainScreenView: View {
     let accentColor: Color = MainScreenProperties.accentColor
     
     var body: some View {
-        VStack(alignment: .center, spacing: 16.0) {
-            
-            /**
-             * # PRO TIP!
-             * The game title can be customized to represent the visual identity of the game
-             */
-            Text("\(self.gameTitle)")
-                .font(.title)
-                .fontWeight(.black)
-                .padding(.top, 24.0)
-            
-            Spacer()
-            
-            /**
-             * To customize the instructions, check the **Constants.swift** file
-             */
-            ForEach(self.gameInstructions, id: \.title) { instruction in
-                GroupBox(label: Label("\(instruction.title)", systemImage: "\(instruction.icon)").foregroundColor(self.accentColor)) {
-                    HStack {
-                        Text("\(instruction.description)")
-                            .font(.callout)
-                        Spacer()
-                    }
+        
+        ZStack {
+            Image("StartView")
+                .resizable()
+                .ignoresSafeArea()
+            VStack(alignment: .center, spacing: 16.0) {
+                Button {
+                    withAnimation { self.startGame() }
+                } label: {
+                    Text("START")
+                        .padding()
+                        .frame(maxWidth: 195)
+                        .font(Font.custom("Daydream", size: 25))
                 }
+                .foregroundColor(.black)
+                .background(.red)
+                .cornerRadius(10.0)
+                .padding()
+                
+                Button(action: {
+                    showingInstructions.toggle()//true
+                }) {
+                    Label("?", systemImage: "")
+                        .font(Font.custom("Daydream", size: 25))
+                        .padding(.bottom, 5)
+                        .foregroundColor(.black)
+                }
+                .sheet(isPresented: $showingInstructions) {
+                    InstructionView(isPresented: $showingInstructions)
+                }
+                
+               
+                
             }
-            
-            Spacer()
-            
-            /**
-             * Customize the appearance of the **Insert a Coin** button to match the visual identity of your game
-             */
-            Button {
-                withAnimation { self.startGame() }
-            } label: {
-                Text("PROTECT EARTH")
-                    .padding()
-                    .frame(maxWidth: .infinity)
-            }
-            .foregroundColor(.white)
-            .background(self.accentColor)
-            .cornerRadius(10.0)
-            
-        }
-        .padding()
+            .padding()
         .statusBar(hidden: true)
+        }
     }
     
     /**
