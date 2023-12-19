@@ -1,11 +1,7 @@
 {
   "images" : [
     {
-<<<<<<< Updated upstream
-      "filename" : "title 2.png",
-=======
-      "filename" : "title.png",
->>>>>>> Stashed changes
+      "filename" : "woddenPlank.png",
       "idiom" : "universal",
       "scale" : "1x"
     },

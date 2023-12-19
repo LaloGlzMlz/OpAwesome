@@ -45,9 +45,13 @@
 		2E004F002B20D08A007EF8EB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2E004F022B20D08B007EF8EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2E004F052B20D08B007EF8EB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+<<<<<<< Updated upstream
 		697818B02B30A8D000F67C74 /* Score.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Score.swift; sourceTree = "<group>"; };
 		697818B22B30A8F000F67C74 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		697818B42B30AB9800F67C74 /* LeaderBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderBoardView.swift; sourceTree = "<group>"; };
+=======
+		2E9437E12B31C4AF00B7A185 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+>>>>>>> Stashed changes
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,9 +131,13 @@
 		2E004EFD2B20D08A007EF8EB /* OpAwesome */ = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< Updated upstream
 				08AE66802B309A3800CCFE74 /* Info.plist */,
 				08FF2C492B30804700AEFEBC /* Fonts */,
                 697818AF2B30A8AF00F67C74 /* DataManagement */,
+=======
+				2E9437E12B31C4AF00B7A185 /* Info.plist */,
+>>>>>>> Stashed changes
 				086D7E182B22165D003886C6 /* Game Over */,
 				2E004EFE2B20D08A007EF8EB /* OpAwesomeApp.swift */,
 				2E004F002B20D08A007EF8EB /* ContentView.swift */,

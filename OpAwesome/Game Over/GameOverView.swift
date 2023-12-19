@@ -35,6 +35,33 @@ struct GameOverView: View {
             ZStack {
                 Color.white
                     .ignoresSafeArea()
+        ZStack {
+            Image("title")
+                .resizable()
+                .ignoresSafeArea()
+            
+            VStack(alignment: .center) {
+                Spacer()
+                
+                Button {
+                    withAnimation { self.backToMainScreen() }
+                } label: {
+                    Text("Back to title screen")
+                        .padding()
+                        //.frame(maxWidth: 195)
+                        .font(Font.custom("Daydream", size: 25))
+                }
+                .background(
+                    Image("woddenPlank")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(maxWidth: 220)
+                )
+                .foregroundColor(.black)
+                //.background(.red)
+                //.cornerRadius(10.0)
+                .padding()
+>>>>>>> Stashed changes
                 
                 VStack(alignment: .center) {
                     Text("Your name:")
