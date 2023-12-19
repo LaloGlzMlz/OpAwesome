@@ -112,7 +112,7 @@ class ArcadeGameScene: SKScene {
         fakedeathButton?.alpha = 0.4
         gameCamera.addChild(fakedeathButton!)
         //Create the enemy
-        enemyCharacter = EnemyCharacter()
+        enemyCharacter = Character(name: "Owl")
         createEnemies()
         startFruitCycle()
         
