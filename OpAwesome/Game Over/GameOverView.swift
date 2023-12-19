@@ -16,18 +16,20 @@ import SwiftUI
 
 struct GameOverView: View {
     
+    @State private var showingLeaderboard = true
+    
     @Binding var currentGameState: GameState
     @State var name: String = ""
     @Binding var scores: [Score]
     let saveAction: ()-> Void
     @State var check = false
-//    var score: Int
+    //    var score: Int
     
-   @StateObject var gameLogic: ArcadeGameLogic =  ArcadeGameLogic.shared
+    @StateObject var gameLogic: ArcadeGameLogic =  ArcadeGameLogic.shared
     
     var body: some View {
         if check {
-            LeaderBoardView(scores: scores)
+            LeaderBoardView(scores: scores, isPresented: $showingLeaderboard)
                 .onTapGesture {
                     backToMainScreen()
                 }
@@ -47,33 +49,6 @@ struct GameOverView: View {
                         self.saveAction()
                         check.toggle()
                     }
-                    
-                    //Old code
-                    
-                    
-    //                Spacer()
-    //                
-    //                Button {
-    //                    withAnimation { self.backToMainScreen() }
-    //                } label: {
-    //                    Image(systemName: "arrow.backward")
-    //                        .foregroundColor(.black)
-    //                        .font(.title)
-    //                }
-    //                .background(Circle().foregroundColor(Color(uiColor: UIColor.systemGray6)).frame(width: 100, height: 100, alignment: .center))
-    //                
-    //                Spacer()
-    //                
-    //                Button {
-    //                    withAnimation { self.restartGame() }
-    //                } label: {
-    //                    Image(systemName: "arrow.clockwise")
-    //                        .foregroundColor(.black)
-    //                        .font(.title)
-    //                }
-    //                .background(Circle().foregroundColor(Color(uiColor: UIColor.systemGray6)).frame(width: 100, height: 100, alignment: .center))
-    //                
-    //                Spacer()
                 }
             }
             .statusBar(hidden: true)
@@ -82,6 +57,8 @@ struct GameOverView: View {
     
     private func backToMainScreen() {
         self.currentGameState = .mainScreen
+        //self.showingLeaderboard = false
+        
     }
     
     private func restartGame() {
