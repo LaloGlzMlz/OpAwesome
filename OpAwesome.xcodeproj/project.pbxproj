@@ -22,6 +22,9 @@
 		2E004F012B20D08A007EF8EB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E004F002B20D08A007EF8EB /* ContentView.swift */; };
 		2E004F032B20D08B007EF8EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E004F022B20D08B007EF8EB /* Assets.xcassets */; };
 		2E004F062B20D08B007EF8EB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E004F052B20D08B007EF8EB /* Preview Assets.xcassets */; };
+		697818B12B30A8D000F67C74 /* Score.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697818B02B30A8D000F67C74 /* Score.swift */; };
+		697818B32B30A8F000F67C74 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697818B22B30A8F000F67C74 /* Store.swift */; };
+		697818B52B30AB9800F67C74 /* LeaderBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697818B42B30AB9800F67C74 /* LeaderBoardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +45,9 @@
 		2E004F002B20D08A007EF8EB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2E004F022B20D08B007EF8EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2E004F052B20D08B007EF8EB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		697818B02B30A8D000F67C74 /* Score.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Score.swift; sourceTree = "<group>"; };
+		697818B22B30A8F000F67C74 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		697818B42B30AB9800F67C74 /* LeaderBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderBoardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				086D7E192B22166D003886C6 /* GameOverView.swift */,
+				697818B42B30AB9800F67C74 /* LeaderBoardView.swift */,
 			);
 			path = "Game Over";
 			sourceTree = "<group>";
@@ -122,6 +129,7 @@
 			children = (
 				08AE66802B309A3800CCFE74 /* Info.plist */,
 				08FF2C492B30804700AEFEBC /* Fonts */,
+                697818AF2B30A8AF00F67C74 /* DataManagement */,
 				086D7E182B22165D003886C6 /* Game Over */,
 				2E004EFE2B20D08A007EF8EB /* OpAwesomeApp.swift */,
 				2E004F002B20D08A007EF8EB /* ContentView.swift */,
@@ -140,6 +148,15 @@
 				2E004F052B20D08B007EF8EB /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		697818AF2B30A8AF00F67C74 /* DataManagement */ = {
+			isa = PBXGroup;
+			children = (
+				697818B02B30A8D000F67C74 /* Score.swift */,
+				697818B22B30A8F000F67C74 /* Store.swift */,
+			);
+			path = DataManagement;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -215,15 +232,18 @@
 			files = (
 				086D7E1A2B22166D003886C6 /* GameOverView.swift in Sources */,
 				086D7E0A2B220C66003886C6 /* ArcadeGameScene.swift in Sources */,
+				697818B52B30AB9800F67C74 /* LeaderBoardView.swift in Sources */,
 				11E6642F2B2B278500239DAD /* Character.swift in Sources */,
 				2E004F012B20D08A007EF8EB /* ContentView.swift in Sources */,
 				086D7E082B220C50003886C6 /* ArcadeGameView.swift in Sources */,
 				08AE66822B30AD8800CCFE74 /* InstructionView.swift in Sources */,
 				2E004EFF2B20D08A007EF8EB /* OpAwesomeApp.swift in Sources */,
 				086D7E172B221638003886C6 /* MainScreenView.swift in Sources */,
+				697818B32B30A8F000F67C74 /* Store.swift in Sources */,
 				086D7E0C2B220D15003886C6 /* ArcadeGameLogic.swift in Sources */,
 				086D7E102B220DB2003886C6 /* Constants.swift in Sources */,
 				086D7E122B220E22003886C6 /* GameDurationView.swift in Sources */,
+				697818B12B30A8D000F67C74 /* Score.swift in Sources */,
 				086D7E142B220E68003886C6 /* GameScoreView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
