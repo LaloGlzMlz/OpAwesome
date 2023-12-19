@@ -33,48 +33,86 @@ struct GameOverView: View {
                 }
         } else {
             ZStack {
-                Color.white
+                Image("title")
+                    .resizable()
                     .ignoresSafeArea()
                 
                 VStack(alignment: .center) {
-                    Text("Your name:")
+                    Text("Your name: ")
+                        .background(
+                            Image("wood")
+                                .resizable()
+                                .frame(width: 220, height: 45)
+                        )
+                        .font(Font.custom("Daydream", size: 15))
+                        .foregroundColor(.black)
+                        //.padding(.top, 130)
                     
                     TextField("Name", text: $name)
+                        .frame(width: 300)
+                        .background(Color(.ground))
+                        .padding(15)
                     
-                    Button("Oye") {
+                    Button {
                         print(name + " \(gameLogic.currentScore)")
                         scores.append(Score(name: name, points: gameLogic.currentScore))
                         self.saveAction()
                         check.toggle()
+                    } label: {
+                        Text("Submit")
+                            .font(Font.custom("Daydream", size: 15))
+                    }
+                    .background(
+                        Image("wood2")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 125, height: 25)
+                    )
+                    .foregroundColor(.black)
+                    .padding(.top, 50)
+                    
+                    
+                    HStack {
+                        Button {
+                            withAnimation { self.backToMainScreen() }
+                        } label: {
+                            Text("Back to title")
+                                .font(Font.custom("Daydream", size: 15))
+                                .foregroundColor(.white)
+                        }
+                        .background(
+                            Image("wood2")
+                                .resizable()
+                                .frame(width: 200, height: 50)
+                        )
+                        .padding(100)
+                        
+                        Button {
+                            withAnimation { self.restartGame() }
+                        } label: {
+                            Text("Play again")
+                                .font(Font.custom("Daydream", size: 15))
+                                .foregroundColor(.white)
+                        }
+                        .background(
+                            Image("wood2")
+                                .resizable()
+                                .frame(width: 200, height: 50)
+                        )
+                        .padding(100)
                     }
                     
                     //Old code
                     
                     
-    //                Spacer()
-    //                
-    //                Button {
-    //                    withAnimation { self.backToMainScreen() }
-    //                } label: {
-    //                    Image(systemName: "arrow.backward")
-    //                        .foregroundColor(.black)
-    //                        .font(.title)
-    //                }
-    //                .background(Circle().foregroundColor(Color(uiColor: UIColor.systemGray6)).frame(width: 100, height: 100, alignment: .center))
     //                
     //                Spacer()
     //                
-    //                Button {
-    //                    withAnimation { self.restartGame() }
-    //                } label: {
-    //                    Image(systemName: "arrow.clockwise")
-    //                        .foregroundColor(.black)
-    //                        .font(.title)
-    //                }
-    //                .background(Circle().foregroundColor(Color(uiColor: UIColor.systemGray6)).frame(width: 100, height: 100, alignment: .center))
+                    
     //                
     //                Spacer()
                 }
+                .offset(y: 55)
             }
             .statusBar(hidden: true)
         }
