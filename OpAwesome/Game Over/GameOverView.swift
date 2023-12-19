@@ -16,18 +16,20 @@ import SwiftUI
 
 struct GameOverView: View {
     
+    @State private var showingLeaderboard = true
+    
     @Binding var currentGameState: GameState
     @State var name: String = ""
     @Binding var scores: [Score]
     let saveAction: ()-> Void
     @State var check = false
-//    var score: Int
+    //    var score: Int
     
-   @StateObject var gameLogic: ArcadeGameLogic =  ArcadeGameLogic.shared
+    @StateObject var gameLogic: ArcadeGameLogic =  ArcadeGameLogic.shared
     
     var body: some View {
         if check {
-            LeaderBoardView(scores: scores)
+            LeaderBoardView(scores: scores, isPresented: $showingLeaderboard)
                 .onTapGesture {
                     backToMainScreen()
                 }
@@ -101,16 +103,6 @@ struct GameOverView: View {
                         )
                         .padding(100)
                     }
-                    
-                    //Old code
-                    
-                    
-    //                
-    //                Spacer()
-    //                
-                    
-    //                
-    //                Spacer()
                 }
                 .offset(y: 55)
             }
@@ -120,6 +112,8 @@ struct GameOverView: View {
     
     private func backToMainScreen() {
         self.currentGameState = .mainScreen
+        //self.showingLeaderboard = false
+        
     }
     
     private func restartGame() {
