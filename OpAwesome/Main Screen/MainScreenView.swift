@@ -17,6 +17,8 @@ import SwiftUI
 struct MainScreenView: View {
     
     @State var showingInstructions = false
+    @State var showingLeaderboard = false
+    
     
     // The game state is used to transition between the different states of the game
     @Binding var currentGameState: GameState
@@ -81,7 +83,7 @@ struct MainScreenView: View {
                     .padding(.top, 50)
                 HStack{
                     Button(action: {
-                        showingInstructions.toggle()//true
+                        showingLeaderboard.toggle()//true
                     }) {
                         Label("Leaderboard", systemImage: "")
                             .font(Font.custom("Daydream", size: 12))
@@ -93,6 +95,13 @@ struct MainScreenView: View {
                             .resizable()
                             .frame(width: 160, height: 50)
                     )
+                    .sheet(isPresented: $showingLeaderboard) {
+                        LeaderBoardView(scores: [
+                            Score(name: "Luigi", points: 12),
+                            Score(name: "Mario", points: 1),
+                            Score(name: "Oye", points: 140)
+                        ], isPresented: $showingLeaderboard)
+                    }
                     
                     Button(action: {
                         showingInstructions.toggle()//true
