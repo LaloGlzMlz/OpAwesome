@@ -29,7 +29,7 @@ enum GameState {
     case gameOver
 }
 
-typealias Instruction = (icon: String, title: String, description: String)
+typealias Instruction = (icon: String, title: String, description: String, image: String)
 
 /**
  * # MainScreenProperties
@@ -42,9 +42,10 @@ struct MainScreenProperties {
     static let gameTitle: String = "OpAwsome!"
     
     static let gameInstructions: [Instruction] = [
-        (icon: "hand.tap", title: "Tap to Move", description: "Tap on the left and right of the screen to activate the space ship engines."),
-        (icon: "divide.circle", title: "Destroy Asteroids", description: "Destroy asteroids by colliding with them."),
-        (icon: "multiply.circle", title: "Don't let them pass!", description: "If three asteroids pass you lose!")
+        (icon: "hand.tap", title: "Explore the forest", description: "Use the joystick to move the opossum through the forest.", image: "joystick"),
+        (icon: "divide.circle", title: "Find and collect apples", description: "Collect as many apples as you can.", image: "find_apples"),
+        (icon: "multiply.circle", title: "Avoid owls", description: "Owls will be hunting in the forest, avoid them and their field of view!", image: "owls_instructions"),
+        (icon: "multiply.circle", title: "Play dead!", description: "Use the button to play dead. This action consumes apples!", image: "FakeDead")
     ]
     
     /**

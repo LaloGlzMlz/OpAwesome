@@ -71,8 +71,6 @@ class ArcadeGameScene: SKScene {
         player.physicsBody?.allowsRotation = false
         
         
-        
-        
         // Create the map node
         mapNode = SKSpriteNode(texture: mapTexture)
         mapNode.size = CGSize(width: 1576 * 2, height: 969 * 2)
@@ -112,7 +110,7 @@ class ArcadeGameScene: SKScene {
         fakedeathButton?.alpha = 0.4
         gameCamera.addChild(fakedeathButton!)
         //Create the enemy
-        enemyCharacter = Character(name: "Owl")
+        enemyCharacter = EnemyCharacter()
         createEnemies()
         startFruitCycle()
         
