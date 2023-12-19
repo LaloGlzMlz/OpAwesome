@@ -46,11 +46,12 @@ struct GameOverView: View {
                         )
                         .font(Font.custom("Daydream", size: 15))
                         .foregroundColor(.black)
+                        //.padding(.top, 130)
                     
                     TextField("Name", text: $name)
                         .frame(width: 300)
                         .background(Color(.ground))
-                        .padding(10)
+                        .padding(15)
                     
                     Button {
                         print(name + " \(gameLogic.currentScore)")
@@ -62,7 +63,7 @@ struct GameOverView: View {
                             .font(Font.custom("Daydream", size: 15))
                     }
                     .background(
-                        Image("wood")
+                        Image("wood2")
                             .resizable()
                             .scaledToFill()
                             .frame(width: 125, height: 25)
@@ -72,7 +73,6 @@ struct GameOverView: View {
                     
                     
                     HStack {
-                        Spacer()
                         Button {
                             withAnimation { self.backToMainScreen() }
                         } label: {
@@ -112,6 +112,7 @@ struct GameOverView: View {
     //                
     //                Spacer()
                 }
+                .offset(y: 55)
             }
             .statusBar(hidden: true)
         }
