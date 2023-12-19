@@ -15,6 +15,8 @@
 		086D7E142B220E68003886C6 /* GameScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086D7E132B220E68003886C6 /* GameScoreView.swift */; };
 		086D7E172B221638003886C6 /* MainScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086D7E162B221638003886C6 /* MainScreenView.swift */; };
 		086D7E1A2B22166D003886C6 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086D7E192B22166D003886C6 /* GameOverView.swift */; };
+		08AE667F2B3094C300CCFE74 /* Daydream.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 08AE667E2B3094C300CCFE74 /* Daydream.ttf */; };
+		08AE66822B30AD8800CCFE74 /* InstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08AE66812B30AD8800CCFE74 /* InstructionView.swift */; };
 		11E6642F2B2B278500239DAD /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E6642E2B2B278500239DAD /* Character.swift */; };
 		2E004EFF2B20D08A007EF8EB /* OpAwesomeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E004EFE2B20D08A007EF8EB /* OpAwesomeApp.swift */; };
 		2E004F012B20D08A007EF8EB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E004F002B20D08A007EF8EB /* ContentView.swift */; };
@@ -34,6 +36,9 @@
 		086D7E132B220E68003886C6 /* GameScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScoreView.swift; sourceTree = "<group>"; };
 		086D7E162B221638003886C6 /* MainScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenView.swift; sourceTree = "<group>"; };
 		086D7E192B22166D003886C6 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
+		08AE667E2B3094C300CCFE74 /* Daydream.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Daydream.ttf; sourceTree = "<group>"; };
+		08AE66802B309A3800CCFE74 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		08AE66812B30AD8800CCFE74 /* InstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionView.swift; sourceTree = "<group>"; };
 		11E6642E2B2B278500239DAD /* Character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
 		2E004EFB2B20D08A007EF8EB /* OpAwesome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpAwesome.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E004EFE2B20D08A007EF8EB /* OpAwesomeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpAwesomeApp.swift; sourceTree = "<group>"; };
@@ -81,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				086D7E162B221638003886C6 /* MainScreenView.swift */,
+				08AE66812B30AD8800CCFE74 /* InstructionView.swift */,
 			);
 			path = "Main Screen";
 			sourceTree = "<group>";
@@ -92,6 +98,14 @@
 				697818B42B30AB9800F67C74 /* LeaderBoardView.swift */,
 			);
 			path = "Game Over";
+			sourceTree = "<group>";
+		};
+		08FF2C492B30804700AEFEBC /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				08AE667E2B3094C300CCFE74 /* Daydream.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		2E004EF22B20D08A007EF8EB = {
@@ -113,7 +127,9 @@
 		2E004EFD2B20D08A007EF8EB /* OpAwesome */ = {
 			isa = PBXGroup;
 			children = (
-				697818AF2B30A8AF00F67C74 /* DataManagement */,
+				08AE66802B309A3800CCFE74 /* Info.plist */,
+				08FF2C492B30804700AEFEBC /* Fonts */,
+                697818AF2B30A8AF00F67C74 /* DataManagement */,
 				086D7E182B22165D003886C6 /* Game Over */,
 				2E004EFE2B20D08A007EF8EB /* OpAwesomeApp.swift */,
 				2E004F002B20D08A007EF8EB /* ContentView.swift */,
@@ -203,6 +219,7 @@
 			files = (
 				2E004F062B20D08B007EF8EB /* Preview Assets.xcassets in Resources */,
 				2E004F032B20D08B007EF8EB /* Assets.xcassets in Resources */,
+				08AE667F2B3094C300CCFE74 /* Daydream.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,6 +236,7 @@
 				11E6642F2B2B278500239DAD /* Character.swift in Sources */,
 				2E004F012B20D08A007EF8EB /* ContentView.swift in Sources */,
 				086D7E082B220C50003886C6 /* ArcadeGameView.swift in Sources */,
+				08AE66822B30AD8800CCFE74 /* InstructionView.swift in Sources */,
 				2E004EFF2B20D08A007EF8EB /* OpAwesomeApp.swift in Sources */,
 				086D7E172B221638003886C6 /* MainScreenView.swift in Sources */,
 				697818B32B30A8F000F67C74 /* Store.swift in Sources */,
@@ -360,9 +378,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"OpAwesome/Preview Content\"";
-				DEVELOPMENT_TEAM = 2W8KS5MVGR;
+				DEVELOPMENT_TEAM = C784BSN9V5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OpAwesome/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -372,7 +391,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.lalo.OpAwesome.ahhhh;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lalo.OpAwesome.oojj23;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -388,9 +407,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"OpAwesome/Preview Content\"";
-				DEVELOPMENT_TEAM = 2W8KS5MVGR;
+				DEVELOPMENT_TEAM = C784BSN9V5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OpAwesome/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -400,7 +420,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.lalo.OpAwesome.ahhhh;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lalo.OpAwesome.oojj23;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
